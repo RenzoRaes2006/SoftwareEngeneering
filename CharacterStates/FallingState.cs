@@ -2,13 +2,14 @@
 using SofEngeneering_project.Entities;
 using SofEngeneering_project.Interfaces;
 using SofEngeneering_project.Patterns;
+using SofEngeneering_project.CharacterStates;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SofEngeneering_project.States
+namespace SofEngeneering_project.CharacterStates
 {
     public class FallingState: IHeroState
     {

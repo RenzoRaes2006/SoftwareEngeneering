@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SofEngeneering_project.Animaties;
 using SofEngeneering_project.Interfaces;
 using SofEngeneering_project.Patterns;
-using SofEngeneering_project.States;
+using SofEngeneering_project.CharacterStates;
 using System.Collections.Generic;
 using System.Diagnostics; // Voor Debug.WriteLine
 

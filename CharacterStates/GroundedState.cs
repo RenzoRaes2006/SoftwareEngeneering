@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using SofEngeneering_project.Entities;
 using SofEngeneering_project.Interfaces;
-using SofEngeneering_project.States; // Zorg dat JumpingState/FallingState hierin staan
+using SofEngeneering_project.CharacterStates; // Zorg dat JumpingState/FallingState hierin staan
 using System;
 
-namespace SofEngeneering_project.States
+namespace SofEngeneering_project.CharacterStates
 {
     public class GroundedState : IHeroState
     {

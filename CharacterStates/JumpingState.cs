@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SofEngeneering_project.States
+namespace SofEngeneering_project.CharacterStates
 {
     public class JumpingState: IHeroState
     {

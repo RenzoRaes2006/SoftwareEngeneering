@@ -11,6 +11,7 @@ namespace SofEngeneering_project.Enums
         Menu,
         Playing,
         LevelComplete,
-        GameFinished
+        GameFinished,
+        GameOver
     }
 }
