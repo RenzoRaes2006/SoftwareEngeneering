@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SofEngeneering_project.Entities;
+using SofEngeneering_project.Enums;
 using SofEngeneering_project.Factories;
 using SofEngeneering_project.Interfaces;
 using SofEngeneering_project.Patterns;
@@ -16,18 +17,28 @@ namespace SofEngeneering_project
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        // --- GAME STATE ---
+        private GameState _currentState;
+        private StartScreen _startScreen;
+        private LevelCompleteScreen _levelCompleteScreen;
+        private int _currentLevelIndex = 1; // Houdt bij welk level we zijn
+        private GameFinishedScreen _gameFinishedScreen;
+
         // --- VISUALS ---
         private ICamera _camera;
         private ScrollingBackground _background;
-        private HUD _hud; // <--- DEZE ONTBRAK
+        private HUD _hud;
 
         // --- GAME OBJECTS ---
         private List<IGameObject> _gameObjects;
         private Hero _hero;
-
-
-        // --- INPUT ---
         private InputHandler _inputHandler;
+
+        // --- ASSETS (Opslaan zodat we levels kunnen herladen) ---
+        private Texture2D _knightTex, _blockTex, _bgTex, _powerUpTex, _coinTex;
+        private SpriteFont _gameFont;
+        private List<Rectangle> _coinFrames;
+        private Rectangle _blockPart, _powerUpPart, _coinPart;
 
         public Game1()
         {
@@ -38,9 +49,8 @@ namespace SofEngeneering_project
 
         protected override void Initialize()
         {
-            // Initialiseer de camera met de huidige schermgrootte
             _camera = new Camera(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-
+            _currentState = GameState.Menu;
             base.Initialize();
         }
 
@@ -48,102 +58,148 @@ namespace SofEngeneering_project
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // 1. LAAD TEXTURES
-            Texture2D knightTex = Content.Load<Texture2D>("knight");
-            Texture2D blockTex = Content.Load<Texture2D>("Block");
-            Texture2D backgroundTex = Content.Load<Texture2D>("Background_2");
-            Texture2D PowerUpTex = Content.Load<Texture2D>("fruit");
-            Texture2D Coin = Content.Load<Texture2D>("coin");
-            SpriteFont font = Content.Load<SpriteFont>("GameFont");
+            // 1. LAAD ALLE ASSETS IN DE VARIABELEN
+            _knightTex = Content.Load<Texture2D>("knight");
+            _blockTex = Content.Load<Texture2D>("Block");
+            _bgTex = Content.Load<Texture2D>("Background_2");
+            _powerUpTex = Content.Load<Texture2D>("fruit");
+            _coinTex = Content.Load<Texture2D>("coin");
+            _gameFont = Content.Load<SpriteFont>("GameFont");
 
-
-            // 2. SETUP ACHTERGROND
-            // We pakken een stukje van 16x32 uit de texture (linksboven: 0,0)
+            // 2. SETUP DATA
             Rectangle bgPart = new Rectangle(0, 0, 16, 32);
+            _background = new ScrollingBackground(_bgTex, bgPart, 0.5f, 4.0f);
 
-            //Hud aanmaken
-            _hud = new HUD(font, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            _blockPart = new Rectangle(0, 0, 434, 768); // Check jouw values!
+            _powerUpPart = new Rectangle(0, 0, 16, 16);
+            _coinPart = new Rectangle(3, 3, 10, 10);
 
-            // Texture, SourceRect, ScrollSpeed (0.5f), Scale (4.0f = groter maken)
-            _background = new ScrollingBackground(backgroundTex, bgPart, 0.5f, 4.0f);
+            _coinFrames = new List<Rectangle>
+            {
+                new Rectangle(3, 3, 10, 10), new Rectangle(20, 3, 8, 10),
+                new Rectangle(37, 3, 6, 10), new Rectangle(54, 3, 4, 10),
+                new Rectangle(69, 3, 6, 10), new Rectangle(84, 3, 8, 10),
+                new Rectangle(99, 3, 10, 10), new Rectangle(116, 3, 8, 10),
+                new Rectangle(133, 3, 6, 10), new Rectangle(150, 3, 4, 10),
+                new Rectangle(165, 3, 6, 10), new Rectangle(180, 3, 8, 10)
+            };
 
-            //powerup rectangle
-            Rectangle applePart = new Rectangle(0, 0, 16, 16);
+            // 3. MAAK SCHERMEN
+            _startScreen = new StartScreen(_gameFont, GraphicsDevice);
+            _levelCompleteScreen = new LevelCompleteScreen(_gameFont, GraphicsDevice);
+            _hud = new HUD(_gameFont, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            _inputHandler = new InputHandler();
+            _gameFinishedScreen = new GameFinishedScreen(_gameFont, GraphicsDevice);
 
-            Rectangle blockPart = new Rectangle(0, 0, 434, 768);
+            // LET OP: We laden het level pas als we op 'Play' drukken, 
+            // of we laden hier alvast level 1 in de achtergrond.
+            LoadLevel(1);
+        }
 
-            Rectangle CoinPart = new Rectangle(3, 3, 10, 10);
+        // --- NIEUWE METHODE: LEVEL LADEN ---
+        private void LoadLevel(int levelIndex)
+        {
+            _currentLevelIndex = levelIndex;
 
-            List<Rectangle> coinFrames = new List<Rectangle>();
-            coinFrames.Add(new Rectangle(3, 3, 10, 10));
-            coinFrames.Add(new Rectangle(20, 3, 8, 10));
-            coinFrames.Add(new Rectangle(37, 3, 6, 10));
-            coinFrames.Add(new Rectangle(54, 3, 4, 10));
-            coinFrames.Add(new Rectangle(69, 3, 6, 10));
-            coinFrames.Add(new Rectangle(84, 3, 8, 10));
-            coinFrames.Add(new Rectangle(99, 3, 10, 10));
-            coinFrames.Add(new Rectangle(116, 3, 8, 10));
-            coinFrames.Add(new Rectangle(133, 3, 6, 10));
-            coinFrames.Add(new Rectangle(150, 3, 4, 10));
-            coinFrames.Add(new Rectangle(165, 3, 6, 10));
-            coinFrames.Add(new Rectangle(180, 3, 8, 10));
+            // Maak level via factory met het level nummer
+            _gameObjects = LevelFactory.CreateLevel(levelIndex, _blockTex, _blockPart, _powerUpTex, _powerUpPart, _coinTex, _coinPart, _coinFrames);
 
+            // Maak nieuwe Hero (reset positie en stats)
+            _hero = new Hero(_knightTex, _gameObjects);
 
-
-            // 3. SETUP LEVEL (FACTORY)
-            _gameObjects = LevelFactory.CreateLevel(blockTex, blockPart, PowerUpTex, applePart, Coin, CoinPart, coinFrames);
-
-            // 4. SETUP HERO
-            // We geven de lijst met gameObjects mee zodat de Hero kan checken op botsingen
-            _hero = new Hero(knightTex, _gameObjects);
-
-
-            //aantal coins tellen
+            // Tel coins opnieuw
             int totalCoins = 0;
             foreach (var obj in _gameObjects)
             {
-                if (obj is Coin)
-                {
-                    totalCoins++;
-                }
+                if (obj is Coin) totalCoins++;
             }
-
             _hero.CoinsRemaining = totalCoins;
 
-            // Voeg de hero ook toe aan de algemene lijst zodat hij getekend en geüpdatet wordt
             _gameObjects.Add(_hero);
 
-            // 5. SETUP INPUT
-            _inputHandler = new InputHandler();
-
-            
+            // Reset camera (optioneel)
+            _camera = new Camera(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
         }
 
         protected override void Update(GameTime gameTime)
         {
-            // Sluit de game met Esc of Back button
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
-            // --- INPUT VERWERKING (COMMAND PATTERN) ---
-            var commands = _inputHandler.GetCommands();
-            foreach (var cmd in commands)
+            switch (_currentState)
             {
-                // De huidige State van de Hero bepaalt wat er gebeurt met de input
-                _hero.CurrentState.HandleInput(cmd, _hero);
+                case GameState.Menu:
+                    string menuAction = _startScreen.Update();
+                    if (menuAction == "Play")
+                    {
+                        LoadLevel(1); // Start bij Level 1
+                        _currentState = GameState.Playing;
+                    }
+                    else if (menuAction == "Exit") Exit();
+                    break;
+
+                case GameState.Playing:
+                    // Input & Update
+                    var commands = _inputHandler.GetCommands();
+                    foreach (var cmd in commands) _hero.CurrentState.HandleInput(cmd, _hero);
+
+                    for (int i = 0; i < _gameObjects.Count; i++) _gameObjects[i].Update(gameTime);
+                    _camera.Follow(_hero);
+
+                    // --- CHECK: ZIJN ALLE COINS OP? ---
+                    if (_hero.CoinsRemaining == 0)
+                    {
+                        // IS DIT HET LAATSTE LEVEL? (Bijvoorbeeld level 2)
+                        if (_currentLevelIndex >= 2)
+                        {
+                            // JA: Ga direct naar het eindscherm ("Proficiat!")
+                            _currentState = GameState.GameFinished;
+                        }
+                        else
+                        {
+                            // NEE: Ga naar het tussen-scherm ("Volgend Level")
+                            _currentState = GameState.LevelComplete;
+                        }
+                    }
+                    break;
+
+                case GameState.LevelComplete:
+                    string levelAction = _levelCompleteScreen.Update();
+
+                    if (levelAction == "Next")
+                    {
+                        int nextLevel = _currentLevelIndex + 1;
+
+                        // AANNAME: Je hebt 2 levels. Dus als nextLevel 3 is, zijn we klaar.
+                        if (nextLevel > 2)
+                        {
+                            // GA NAAR HET EINDSCHERM
+                            _currentState = GameState.GameFinished;
+                        }
+                        else
+                        {
+                            // Laad volgende level
+                            LoadLevel(nextLevel);
+                            _currentState = GameState.Playing;
+                        }
+                    }
+                    else if (levelAction == "Exit") Exit();
+                    break;
+
+                // NIEUWE CASE VOOR HET EINDSCHERM
+                case GameState.GameFinished:
+                    string endAction = _gameFinishedScreen.Update();
+
+                    if (endAction == "Restart")
+                    {
+                        // Terug naar hoofdmenu
+                        _currentState = GameState.Menu;
+                    }
+                    else if (endAction == "Exit")
+                    {
+                        Exit();
+                    }
+                    break;
             }
-
-            // --- UPDATE ALLE OBJECTEN ---
-            // We gebruiken een for-loop omdat dit veiliger is als de lijst verandert tijdens update
-            for (int i = 0; i < _gameObjects.Count; i++)
-            {
-                _gameObjects[i].Update(gameTime);
-            }
-
-
-            // --- CAMERA UPDATE ---
-            // Laat de camera de speler volgen NA de physics update
-            _camera.Follow(_hero);
 
             base.Update(gameTime);
         }
@@ -152,48 +208,58 @@ namespace SofEngeneering_project
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // ================================================================
-            // BLOK 1: ACHTERGROND (Zonder Camera Matrix)
-            // ================================================================
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-
-            // Teken achtergrond
-            if (_background != null)
+            // TEKEN ACHTERGROND (Altijd zichtbaar behalve misschien in menu)
+            if (_currentState == GameState.Playing || _currentState == GameState.LevelComplete)
+            {
+                _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
                 _background.Draw(_spriteBatch, _camera);
-
-            _spriteBatch.End(); // <--- DEZE MOET HIER STAAN!
-
-
-            // ================================================================
-            // BLOK 2: DE SPEELWERELD (MET Camera Matrix)
-            // ================================================================
-            _spriteBatch.Begin(
-                samplerState: SamplerState.PointClamp,
-                transformMatrix: _camera.Transform // Hier gebruiken we de camera
-            );
-
-            // Teken alle game objecten (Hero, blokken, coins, powerups)
-            foreach (var obj in _gameObjects)
-            {
-                obj.Draw(_spriteBatch);
+                _spriteBatch.End();
             }
 
-            _spriteBatch.End(); // <--- DEZE BEN JE WAARSCHIJNLIJK VERGETEN!
-
-
-            // ================================================================
-            // BLOK 3: DE HUD / UI (Zonder Camera Matrix)
-            // ================================================================
-            // We starten weer vers, want tekst moet stilstaan op het scherm
-            _spriteBatch.Begin();
-
-            if (_hud != null)
+            switch (_currentState)
             {
-                _hud.Draw(_spriteBatch, _hero);
+                case GameState.Menu:
+                    _spriteBatch.Begin();
+                    _startScreen.Draw(_spriteBatch);
+                    _spriteBatch.End();
+                    break;
+
+                case GameState.Playing:
+                    // Wereld
+                    _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _camera.Transform);
+                    foreach (var obj in _gameObjects) obj.Draw(_spriteBatch);
+                    _spriteBatch.End();
+                    // HUD
+                    _spriteBatch.Begin();
+                    _hud.Draw(_spriteBatch, _hero);
+                    _spriteBatch.End();
+                    break;
+
+                case GameState.LevelComplete:
+                    // Teken eerst de wereld nog op de achtergrond (bevroren)
+                    _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _camera.Transform);
+                    foreach (var obj in _gameObjects) obj.Draw(_spriteBatch);
+                    _spriteBatch.End();
+
+                    // Teken daaroverheen het scherm
+                    _spriteBatch.Begin();
+                    _levelCompleteScreen.Draw(_spriteBatch);
+                    _spriteBatch.End();
+                    break;
+
+                case GameState.GameFinished:
+                    // Je mag kiezen: wil je de game wereld op de achtergrond zien?
+                    // Zo ja, laat het blok hieronder staan. Zo nee, haal het weg.
+                    _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _camera.Transform);
+                    foreach (var obj in _gameObjects) obj.Draw(_spriteBatch);
+                    _spriteBatch.End();
+
+                    // Teken het eindscherm eroverheen
+                    _spriteBatch.Begin();
+                    _gameFinishedScreen.Draw(_spriteBatch);
+                    _spriteBatch.End();
+                    break;
             }
-
-            _spriteBatch.End(); // <--- EN DEZE MOET HET AFSLUITEN
-
 
             base.Draw(gameTime);
         }

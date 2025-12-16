@@ -18,6 +18,7 @@ namespace SofEngeneering_project.Entities
         // --- GAME DATA (Voor HUD) ---
         public int CoinsRemaining { get; set; } = 0;
         public float PowerUpTimer { get; private set; } = 0f; // Publiek voor HUD, private set
+        public float CoinFeedbackTimer { get; private set; } = 0f;
 
         // --- INTERNE VARIABELEN ---
         private bool _hasSuperJump = false;
@@ -101,6 +102,11 @@ namespace SofEngeneering_project.Entities
             // 5. VISUELE RICHTING (Flip)
             if (Velocity.X > 0) Animatie.Flip = false;
             else if (Velocity.X < 0) Animatie.Flip = true;
+
+            if (CoinFeedbackTimer > 0)
+            {
+                CoinFeedbackTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
         }
 
         // --- DRAW ---
@@ -267,9 +273,9 @@ namespace SofEngeneering_project.Entities
                     if (CollisionBox.Intersects(coin.CollisionBox))
                     {
                         coin.IsCollected = true;
-                        CoinsRemaining--; // Trek af van totaal
-                        Notify("COIN_COLLECTED");
-                        Debug.WriteLine($"Coins left: {CoinsRemaining}");
+                        CoinsRemaining--;
+                        // NIEUW: Zet de timer op 1 seconde (1 seconde flikkeren)
+                        CoinFeedbackTimer = 1f;
                     }
                 }
             }

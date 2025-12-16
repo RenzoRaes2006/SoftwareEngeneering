@@ -40,17 +40,32 @@ namespace SofEngeneering_project.View
             // ---------------------------------------------------
             // 2. COINS TELLER (Rechtsboven, onder timer)
             // ---------------------------------------------------
+            // --- COINS TEKST MET FLIKKER EFFECT ---
             string coinText = $"Coins over: {hero.CoinsRemaining}";
 
-            // Bereken breedte
-            Vector2 coinSize = _font.MeasureString(coinText);
+            // Standaard kleur is wit
+            Color coinColor = Color.White;
 
-            // Positie: X = rechts uitgelijnd, Y = 50 (zodat het onder de timer staat)
+            // ALS de timer loopt (we hebben net een muntje gepakt)...
+            if (hero.CoinFeedbackTimer > 0)
+            {
+                // TRUCJE: Gebruik de timer om te 'knipperen'
+                // We vermenigvuldigen met 20 voor de snelheid. 
+                // De 'Modulo 2' (% 2) zorgt dat het resultaat 0 of 1 is.
+                // 0 = Rood, 1 = Wit
+                if ((int)(hero.CoinFeedbackTimer * 20) % 2 == 0)
+                {
+                    coinColor = Color.Red; // Of Color.Transparent als je tekst wil laten verdwijnen
+                }
+            }
+
+            // Positie berekenen
+            Vector2 coinSize = _font.MeasureString(coinText);
             Vector2 coinPos = new Vector2(_screenWidth - coinSize.X - 20, 50);
 
-            // Teken schaduw (zwart) + tekst (wit)
-            spriteBatch.DrawString(_font, coinText, coinPos + new Vector2(2, 2), Color.Black);
-            spriteBatch.DrawString(_font, coinText, coinPos, Color.White);
+            // Teken met de dynamische kleur
+            spriteBatch.DrawString(_font, coinText, coinPos + new Vector2(2, 2), Color.Black); // Schaduw blijft zwart
+            spriteBatch.DrawString(_font, coinText, coinPos, coinColor); // Tekst flikkert
 
             // ---------------------------------------------------
             // 3. LEVEL COMPLETE (Midden van scherm)

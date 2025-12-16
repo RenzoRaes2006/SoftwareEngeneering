@@ -37,3 +37,4 @@ C:\Users\rraes\OneDrive\Documenten\2ITSOF2\semester 1\software engeneering\proje
 C:\Users\rraes\OneDrive\Documenten\2ITSOF2\semester 1\software engeneering\project\SofEngeneering project\bin\Debug\net8.0\Content\fruit.xnb
 C:\Users\rraes\OneDrive\Documenten\2ITSOF2\semester 1\software engeneering\project\SofEngeneering project\bin\Debug\net8.0\Content\coin.xnb
 C:\Users\rraes\OneDrive\Documenten\2ITSOF2\semester 1\software engeneering\project\SofEngeneering project\bin\Debug\net8.0\Content\GameFont.xnb
+C:\Users\rraes\OneDrive\Documenten\2ITSOF2\semester 1\software engeneering\project\SofEngeneering project\obj\Debug\net8.0\SofEngeneering project.sourcelink.json

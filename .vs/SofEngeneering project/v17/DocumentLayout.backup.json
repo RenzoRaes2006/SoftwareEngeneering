@@ -3,16 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|c:\\users\\rraes\\onedrive\\documenten\\2itsof2\\semester 1\\software engeneering\\project\\sofengeneering project\\entities\\block.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|solutionrelative:entities\\block.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|c:\\users\\rraes\\onedrive\\documenten\\2itsof2\\semester 1\\software engeneering\\project\\sofengeneering project\\view\\startsceen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|solutionrelative:view\\startsceen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|c:\\users\\rraes\\onedrive\\documenten\\2itsof2\\semester 1\\software engeneering\\project\\sofengeneering project\\entities\\hero.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|solutionrelative:entities\\hero.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|c:\\users\\rraes\\onedrive\\documenten\\2itsof2\\semester 1\\software engeneering\\project\\sofengeneering project\\view\\levelcompletescreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|solutionrelative:view\\levelcompletescreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|c:\\users\\rraes\\onedrive\\documenten\\2itsof2\\semester 1\\software engeneering\\project\\sofengeneering project\\game1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|solutionrelative:game1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|c:\\users\\rraes\\onedrive\\documenten\\2itsof2\\semester 1\\software engeneering\\project\\sofengeneering project\\view\\gamefinishedscreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|solutionrelative:view\\gamefinishedscreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|c:\\users\\rraes\\onedrive\\documenten\\2itsof2\\semester 1\\software engeneering\\project\\sofengeneering project\\enums\\gamestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|solutionrelative:enums\\gamestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|c:\\users\\rraes\\onedrive\\documenten\\2itsof2\\semester 1\\software engeneering\\project\\sofengeneering project\\factories\\levelfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -23,8 +31,28 @@
       "RelativeMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|solutionrelative:view\\hud.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|c:\\users\\rraes\\onedrive\\documenten\\2itsof2\\semester 1\\software engeneering\\project\\sofengeneering project\\entities\\hero.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|solutionrelative:entities\\hero.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|c:\\users\\rraes\\onedrive\\documenten\\2itsof2\\semester 1\\software engeneering\\project\\sofengeneering project\\states\\fallingstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|solutionrelative:states\\fallingstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|c:\\users\\rraes\\onedrive\\documenten\\2itsof2\\semester 1\\software engeneering\\project\\sofengeneering project\\states\\groundedstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|solutionrelative:states\\groundedstate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|c:\\users\\rraes\\onedrive\\documenten\\2itsof2\\semester 1\\software engeneering\\project\\sofengeneering project\\entities\\coin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|solutionrelative:entities\\coin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|c:\\users\\rraes\\onedrive\\documenten\\2itsof2\\semester 1\\software engeneering\\project\\sofengeneering project\\entities\\powerup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|solutionrelative:entities\\powerup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|c:\\users\\rraes\\onedrive\\documenten\\2itsof2\\semester 1\\software engeneering\\project\\sofengeneering project\\entities\\block.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B83DFC7D-5B66-4962-8975-B75F35277DB5}|SofEngeneering project.csproj|solutionrelative:entities\\block.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,56 +62,71 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 11,
+              "Title": "PowerUp.cs",
+              "DocumentMoniker": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\Entities\\PowerUp.cs",
+              "RelativeDocumentMoniker": "Entities\\PowerUp.cs",
+              "ToolTip": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\Entities\\PowerUp.cs",
+              "RelativeToolTip": "Entities\\PowerUp.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAA7wBkAAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T08:31:17.919Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
               "Title": "Block.cs",
               "DocumentMoniker": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\Entities\\Block.cs",
               "RelativeDocumentMoniker": "Entities\\Block.cs",
               "ToolTip": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\Entities\\Block.cs",
               "RelativeToolTip": "Entities\\Block.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAA2AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-09T10:35:06.215Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-09T10:35:06.215Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "HUD.cs",
               "DocumentMoniker": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\view\\HUD.cs",
               "RelativeDocumentMoniker": "view\\HUD.cs",
               "ToolTip": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\view\\HUD.cs",
               "RelativeToolTip": "view\\HUD.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAzwEwAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAABAAAAAAAAAAAAAQwEMAAABaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-09T10:33:09.537Z"
+              "WhenOpened": "2025-12-09T10:33:09.537Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 7,
               "Title": "Hero.cs",
               "DocumentMoniker": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\Entities\\Hero.cs",
               "RelativeDocumentMoniker": "Entities\\Hero.cs",
               "ToolTip": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\Entities\\Hero.cs",
               "RelativeToolTip": "Entities\\Hero.cs",
-              "ViewState": "AgIAALAAAAAAAAAAAAAiwLgAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAHkAAAAAAAAAAAAqwBQBAABRAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-06T13:48:45.783Z"
+              "WhenOpened": "2025-12-06T13:48:45.783Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 5,
-              "Title": "Coin.cs",
-              "DocumentMoniker": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\Entities\\Coin.cs",
-              "RelativeDocumentMoniker": "Entities\\Coin.cs",
-              "ToolTip": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\Entities\\Coin.cs",
-              "RelativeToolTip": "Entities\\Coin.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAcwCoAAAAAAAAAAAAAAA==",
+              "Title": "LevelFactory.cs",
+              "DocumentMoniker": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\Factories\\LevelFactory.cs",
+              "RelativeDocumentMoniker": "Factories\\LevelFactory.cs",
+              "ToolTip": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\Factories\\LevelFactory.cs",
+              "RelativeToolTip": "Factories\\LevelFactory.cs",
+              "ViewState": "AgIAACUAAAAAAAAAAAAqwDkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-09T09:52:54.91Z"
+              "WhenOpened": "2025-12-06T14:55:07.495Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -93,21 +136,101 @@
               "RelativeDocumentMoniker": "Game1.cs",
               "ToolTip": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\Game1.cs",
               "RelativeToolTip": "Game1.cs",
-              "ViewState": "AgIAADEAAAAAAAAAAAAiwIQAAAAzAAAAAAAAAA==",
+              "ViewState": "AgIAAIYAAAAAAAAAAAAqwKEAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-06T14:55:14.198Z"
+              "WhenOpened": "2025-12-06T14:55:14.198Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "LevelCompleteScreen.cs",
+              "DocumentMoniker": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\view\\LevelCompleteScreen.cs",
+              "RelativeDocumentMoniker": "view\\LevelCompleteScreen.cs",
+              "ToolTip": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\view\\LevelCompleteScreen.cs",
+              "RelativeToolTip": "view\\LevelCompleteScreen.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAiwBcAAABSAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T08:59:31.58Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "StartSceen.cs",
+              "DocumentMoniker": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\view\\StartSceen.cs",
+              "RelativeDocumentMoniker": "view\\StartSceen.cs",
+              "ToolTip": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\view\\StartSceen.cs*",
+              "RelativeToolTip": "view\\StartSceen.cs*",
+              "ViewState": "AgIAAEsAAAAAAAAAAAAYwFMAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T08:51:20.306Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "GameState.cs",
+              "DocumentMoniker": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\Enums\\GameState.cs",
+              "RelativeDocumentMoniker": "Enums\\GameState.cs",
+              "ToolTip": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\Enums\\GameState.cs",
+              "RelativeToolTip": "Enums\\GameState.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA0AAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T08:49:28.235Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "LevelFactory.cs",
-              "DocumentMoniker": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\Factories\\LevelFactory.cs",
-              "RelativeDocumentMoniker": "Factories\\LevelFactory.cs",
-              "ToolTip": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\Factories\\LevelFactory.cs",
-              "RelativeToolTip": "Factories\\LevelFactory.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAqwCMAAAAAAAAAAAAAAA==",
+              "Title": "GameFinishedScreen.cs",
+              "DocumentMoniker": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\view\\GameFinishedScreen.cs",
+              "RelativeDocumentMoniker": "view\\GameFinishedScreen.cs",
+              "ToolTip": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\view\\GameFinishedScreen.cs",
+              "RelativeToolTip": "view\\GameFinishedScreen.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGIAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-06T14:55:07.495Z"
+              "WhenOpened": "2025-12-16T09:09:03.96Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "GroundedState.cs",
+              "DocumentMoniker": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\States\\GroundedState.cs",
+              "RelativeDocumentMoniker": "States\\GroundedState.cs",
+              "ToolTip": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\States\\GroundedState.cs",
+              "RelativeToolTip": "States\\GroundedState.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T08:33:23.851Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Coin.cs",
+              "DocumentMoniker": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\Entities\\Coin.cs",
+              "RelativeDocumentMoniker": "Entities\\Coin.cs",
+              "ToolTip": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\Entities\\Coin.cs",
+              "RelativeToolTip": "Entities\\Coin.cs",
+              "ViewState": "AgIAACcAAAAAAAAAAAAowCsAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-09T09:52:54.91Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "FallingState.cs",
+              "DocumentMoniker": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\States\\FallingState.cs",
+              "RelativeDocumentMoniker": "States\\FallingState.cs",
+              "ToolTip": "C:\\Users\\rraes\\OneDrive\\Documenten\\2ITSOF2\\semester 1\\software engeneering\\project\\SofEngeneering project\\States\\FallingState.cs",
+              "RelativeToolTip": "States\\FallingState.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAYwDIAAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T08:33:24.659Z",
+              "EditorCaption": ""
             }
           ]
         }

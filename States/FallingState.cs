@@ -48,7 +48,7 @@ namespace SofEngeneering_project.States
             foreach (var obj in hero.LevelObjects)
             {
                 if (obj == hero) continue;
-                if (obj is PowerUp) continue;
+                if (obj is PowerUp || obj is Coin) continue;
 
                 if (futureBox.Intersects(obj.CollisionBox))
                 {
