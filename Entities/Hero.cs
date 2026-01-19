@@ -1,37 +1,61 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SofEngeneering_project.Animaties;
+using SofEngeneering_project.CharacterStates;
 using SofEngeneering_project.Interfaces;
 using SofEngeneering_project.Patterns;
-using SofEngeneering_project.CharacterStates;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics; // Voor Debug.WriteLine
+using System.Diagnostics;
 
 namespace SofEngeneering_project.Entities
 {
     public class Hero : IGameObject, IMovable
     {
-        // --- POSITIE & SNELHEID ---
+        // =============================================================
+        // 1. DATA & PROPERTIES
+        // =============================================================
+
         public Vector2 Position { get; set; }
         public Vector2 Velocity { get; set; }
 
-        // --- GAME DATA (Voor HUD) ---
+        // HUD Data
         public int CoinsRemaining { get; set; } = 0;
-        public float PowerUpTimer { get; private set; } = 0f; // Publiek voor HUD, private set
+        public float PowerUpTimer { get; private set; } = 0f;
         public float CoinFeedbackTimer { get; private set; } = 0f;
 
-        // --- INTERNE VARIABELEN ---
+        // Interne flags
         private bool _hasSuperJump = false;
         private List<IGameObserver> _observers = new List<IGameObserver>();
+        public bool WantsToJump { get; set; }
 
-        // --- ANIMATIE INSTILLINGEN ---
-        // De exacte X-posities op de sprite sheet
-        private int[] _walkXCoords = { 16, 82, 146, 210, 272, 338, 402, 466 };
-        private int _spriteY = 148;
-        private int _spriteWidth = 26;
-        private int _spriteHeight = 36;
+        // =============================================================
+        // 2. ANIMATIE INSTELLINGEN (AANGEPAST OP JOUW NIEUWE METINGEN)
+        // =============================================================
 
-        // --- COLLISION SETTINGS ---
+        // --- IDLE (Stilstaan) ---
+        // We pakken de HOOGSTE Y-waarde (18) en de GROOTSTE hoogte (38).
+        // Hierdoor passen alle frames erin.
+        private int _idleSpriteY = 18;
+        private int _idleWidth = 26;
+        private int _idleHeight = 38;
+
+        // Jouw gemeten X-coördinaten:
+        private int[] _idleXCoords = { 18, 82, 146, 210 };
+
+        // --- RUN (Rennen) ---
+        // Standaard waarden voor de rennende ridder
+        private int _runSpriteY = 148;
+        private int _runWidth = 26;
+        private int _runHeight = 36;
+        private int[] _runXCoords = { 16, 82, 146, 210, 272, 338, 402, 466 };
+
+        // =============================================================
+        // 3. COLLISION BOX
+        // =============================================================
+
+        // We houden de hitbox consistent op de Run-hoogte (36) of Idle-hoogte (38).
+        // 36 is veiliger om nergens in vast te komen zitten tijdens het rennen.
         private int _hitboxWidth = 25;
         private int _hitboxHeight = 36;
         private int _offsetX = 0;
@@ -44,76 +68,88 @@ namespace SofEngeneering_project.Entities
             _hitboxHeight
         );
 
-        // --- OBJECTEN & PATTERNS ---
+        // =============================================================
+        // 4. DEPENDENCIES
+        // =============================================================
         public Animatie Animatie { get; private set; }
         public IHeroState CurrentState { get; set; }
         public IJumpStrategy JumpStrategy { get; set; }
         public List<IGameObject> LevelObjects { get; set; }
 
-        // Variabele voor states om te weten of er gesprongen moet worden
-        public bool WantsToJump { get; set; }
-
+        // =============================================================
+        // 5. CONSTRUCTOR
+        // =============================================================
         public Hero(Texture2D texture, List<IGameObject> levelObjects)
         {
             Animatie = new Animatie(texture);
 
-            // Start animatie instellen
-            SetIdleAnimation();
-
-            Position = new Vector2(50, 200); // Startpositie
+            Position = new Vector2(50, 200);
             LevelObjects = levelObjects;
 
-            // Standaard strategie en state
             JumpStrategy = new NormalJumpStrategy();
-            CurrentState = new FallingState();
+
+            // Start in Idle
+            CurrentState = new IdleState();
+            CurrentState.Enter(this);
         }
 
-        // --- UPDATE LOOP ---
+        // =============================================================
+        // 6. UPDATE
+        // =============================================================
         public void Update(GameTime gameTime)
         {
             WantsToJump = false;
 
-            // 1. POWERUP TIMER LOGICA
+            // PowerUp
             if (_hasSuperJump)
             {
                 PowerUpTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-                if (PowerUpTimer <= 0)
-                {
-                    RemoveSuperJump();
-                }
+                if (PowerUpTimer <= 0) RemoveSuperJump();
             }
 
-            // 2. UPDATES
+            // Animatie & State
             Animatie.Update(gameTime);
             CurrentState.Update(this, gameTime);
 
-            // 3. BEWEGING & PHYSICS
-            // Horizontaal
+            // Fysica (Eerst X, dan Y)
             Position += new Vector2(Velocity.X, 0);
             HandleHorizontalCollision();
 
-            // Verticaal
             Position += new Vector2(0, Velocity.Y);
             HandleVerticalCollision();
 
-            // 4. OBJECT INTERACTIES (Coins & Powerups)
+            // Objecten
             HandleObjectCollisions();
 
-            // 5. VISUELE RICHTING (Flip)
+            // Flip sprite
             if (Velocity.X > 0) Animatie.Flip = false;
             else if (Velocity.X < 0) Animatie.Flip = true;
 
+            // Feedback Timer
             if (CoinFeedbackTimer > 0)
-            {
                 CoinFeedbackTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-            }
         }
 
-        // --- DRAW ---
+        // =============================================================
+        // 7. DRAW
+        // =============================================================
         public void Draw(SpriteBatch spriteBatch)
         {
             SpriteEffects effect = Animatie.Flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-            Vector2 drawPos = new Vector2((int)Position.X, (int)Position.Y);
+
+            // --- CORRECTIE VOOR VERSCHILLENDE HOOGTES ---
+            int drawOffsetY = 0;
+
+            if (CurrentState is IdleState)
+            {
+                // Run is 36 hoog, Idle is 38 hoog.
+                // 36 - 38 = -2.
+                // Dit betekent dat we 2 pixels hoger moeten tekenen,
+                // zodat de onderkant (de voeten) op dezelfde plek blijft.
+                drawOffsetY = (_runHeight - _idleHeight);
+            }
+
+            Vector2 drawPos = new Vector2((int)Position.X, (int)Position.Y + drawOffsetY);
 
             spriteBatch.Draw(
                 Animatie.Texture,
@@ -128,38 +164,35 @@ namespace SofEngeneering_project.Entities
             );
         }
 
-        // --- METHODES VOOR ANIMATIES (Gebruikt door States) ---
+        // =============================================================
+        // 8. ANIMATIE SETTERS
+        // =============================================================
         public void SetRunAnimation()
         {
-            Animatie.SetAnimationCoordinates(_walkXCoords, _spriteY, _spriteWidth, _spriteHeight);
+            Animatie.SetAnimationCoordinates(_runXCoords, _runSpriteY, _runWidth, _runHeight);
         }
 
         public void SetIdleAnimation()
         {
-            int[] idleFrame = { _walkXCoords[0] };
-            Animatie.SetAnimationCoordinates(idleFrame, _spriteY, _spriteWidth, _spriteHeight);
+            Animatie.SetAnimationCoordinates(_idleXCoords, _idleSpriteY, _idleWidth, _idleHeight);
         }
 
-        // --- JUMP LOGICA (Strategy Pattern) ---
+        // =============================================================
+        // 9. GAMEPLAY (Jump & Powerups)
+        // =============================================================
         public void PerformJump()
         {
-            // Gebruik de huidige strategie (Normal of Super)
             float jumpForce = JumpStrategy.CalculateJump(Velocity.Y);
             Velocity = new Vector2(Velocity.X, jumpForce);
-
-            Notify("JUMP");
         }
 
-        // --- POWERUP LOGICA (Decorator Pattern) ---
         public void EnableSuperJump()
         {
             if (!_hasSuperJump)
             {
                 JumpStrategy = new SuperJump(JumpStrategy);
                 _hasSuperJump = true;
-                Debug.WriteLine("POWERUP: SuperJump Active!");
             }
-            // Reset timer naar 5 seconden
             PowerUpTimer = 5.0f;
         }
 
@@ -170,111 +203,90 @@ namespace SofEngeneering_project.Entities
                 JumpStrategy = new NormalJumpStrategy();
                 _hasSuperJump = false;
                 PowerUpTimer = 0;
-                Debug.WriteLine("POWERUP: SuperJump Expired.");
             }
         }
 
-        // --- OBSERVER PATTERN ---
         public void AddObserver(IGameObserver observer) => _observers.Add(observer);
-        public void Notify(string eventName) { foreach (var obs in _observers) obs.OnNotify(eventName); }
 
-        // --- COLLISION LOGICA ---
-
-        // 1. Horizontale muren
+        // =============================================================
+        // 10. COLLISION HANDLING
+        // =============================================================
         private void HandleHorizontalCollision()
         {
             Rectangle myRect = CollisionBox;
             foreach (var obj in LevelObjects)
             {
-                if (obj == this) continue;
-                if (obj is PowerUp || obj is Coin) continue;
-
-                // --- DE OPLOSSING ---
-                // 1. Verwijder/negeer de 'block.IsPlatform' check die je eerder had.
-
-                // 2. Voeg deze check toe:
-                // Als we OMHOOG springen (Velocity Y is negatief), negeren we muren.
-                // Dit zorgt dat we soepel door de onderkant van blokken kunnen vliegen.
-                if (Velocity.Y < 0)
-                {
-                    continue;
-                }
-                // --------------------
+                if (obj == this || obj is PowerUp || obj is Coin || obj is Enemy) continue;
+                if (Velocity.Y < 0) continue; // One-way platform
 
                 if (myRect.Intersects(obj.CollisionBox))
                 {
-                    // Jouw bestaande botsing code (duw naar links/rechts)
                     if (Velocity.X > 0)
-                    {
-                        float newX = obj.CollisionBox.Left - _hitboxWidth - _offsetX;
-                        Position = new Vector2(newX, Position.Y);
-                    }
+                        Position = new Vector2(obj.CollisionBox.Left - _hitboxWidth - _offsetX, Position.Y);
                     else if (Velocity.X < 0)
-                    {
-                        float newX = obj.CollisionBox.Right - _offsetX;
-                        Position = new Vector2(newX, Position.Y);
-                    }
+                        Position = new Vector2(obj.CollisionBox.Right - _offsetX, Position.Y);
+
                     Velocity = new Vector2(0, Velocity.Y);
                 }
             }
         }
-       
 
-        // 2. Verticale botsing (Plafond check)
-        // Let op: Landen op de grond wordt geregeld in de FallingState/GroundedState 'HasLanded' check.
         private void HandleVerticalCollision()
         {
             Rectangle myRect = CollisionBox;
             foreach (var obj in LevelObjects)
             {
-                if (obj == this) continue;
-                if (obj is PowerUp || obj is Coin) continue;
-
-                // --- AANPASSING ---
-                // Als we omhoog springen, willen we GEEN botsing met blokken (we vliegen erdoor).
-                // Dus we skippen de rest van de loop als Y < 0.
-                if (Velocity.Y < 0)
-                {
-                    continue;
-                }
-                // ------------------
+                if (obj == this || obj is PowerUp || obj is Coin || obj is Enemy) continue;
+                if (Velocity.Y < 0) continue; // Spring door platformen heen
 
                 if (myRect.Intersects(obj.CollisionBox))
                 {
-                    // Omdat we hierboven al 'continue' doen bij Y < 0, 
-                    // zal de code voor "hoofd stoten" nooit meer uitgevoerd worden op blokken.
-                    // Dit is precies wat je wilt: door het plafond heen springen.
+                    // LANDEN
+                    if (Velocity.Y > 0)
+                    {
+                        // Zet positie op het blok
+                        float newY = obj.CollisionBox.Top - _hitboxHeight - _offsetY;
+                        Position = new Vector2(Position.X, newY);
 
-                    // Je kunt hier eventueel nog wel logica voor landen (Y > 0) laten staan
-                    // als je dat hier regelt (maar meestal zit dat in je States).
+                        Velocity = new Vector2(Velocity.X, 0);
+
+                        // State switch: Als we vielen, ga nu naar Idle of Running
+                        if (CurrentState is FallingState)
+                        {
+                            if (Math.Abs(Velocity.X) > 0.1f)
+                            {
+                                CurrentState = new RunningState();
+                                CurrentState.Enter(this);
+                            }
+                            else
+                            {
+                                CurrentState = new IdleState();
+                                CurrentState.Enter(this);
+                            }
+                        }
+                    }
                 }
             }
         }
 
-        // 3. Interacties met Items (Oppakken)
         private void HandleObjectCollisions()
         {
             foreach (var obj in LevelObjects)
             {
-                // -- POWERUP --
                 if (obj is PowerUp powerUp && !powerUp.IsCollected)
                 {
                     if (CollisionBox.Intersects(powerUp.CollisionBox))
                     {
                         powerUp.IsCollected = true;
                         EnableSuperJump();
-                        Notify("POWERUP_COLLECTED");
                     }
                 }
-
-                // -- COIN --
                 if (obj is Coin coin && !coin.IsCollected)
                 {
                     if (CollisionBox.Intersects(coin.CollisionBox))
                     {
                         coin.IsCollected = true;
                         CoinsRemaining--;
-                        // NIEUW: Zet de timer op 1 seconde (1 seconde flikkeren)
                         CoinFeedbackTimer = 1f;
                     }
                 }

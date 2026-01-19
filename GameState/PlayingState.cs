@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace SofEngeneering_project.GameState
 {
-    public class PlayingState:IGameState
+    public class PlayingState : IGameState
     {
         private Game1 _game;
         private List<IGameObject> _gameObjects;
@@ -35,26 +35,32 @@ namespace SofEngeneering_project.GameState
             _hud = new HUD(_game.GameFont, _game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height);
             _inputHandler = new InputHandler();
 
-            // 2. Level Factory aanroepen met de assets uit Game1
+            // 2. Level Factory aanroepen
+            // HIER IS DE AANPASSING: We geven nu ook de enemy-assets mee!
             _gameObjects = LevelFactory.CreateLevel(
                 levelIndex,
                 _game.BlockTex, _game.BlockPart,
                 _game.PowerUpTex, _game.PowerUpPart,
                 _game.CoinTex, _game.CoinPart,
-                _game.CoinFrames
+                _game.CoinFrames,
+                // NIEUWE ARGUMENTEN:
+                _game.GreenSlimeTex,
+                _game.greenSlimeFrames,
+                _game.PurpleSlimeTex,
+                _game.purpleSlimeFrames
             );
 
             // 3. Hero maken
             _hero = new Hero(_game.KnightTex, _gameObjects);
 
-            // Coins tellen
+            // Coins tellen voor de HUD
             int totalCoins = 0;
             foreach (var obj in _gameObjects) if (obj is Coin) totalCoins++;
             _hero.CoinsRemaining = totalCoins;
 
             _gameObjects.Add(_hero);
 
-            // Camera resetten voor het nieuwe level
+            // Camera resetten
             _game.Camera = new Camera(_game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height);
         }
 
@@ -64,32 +70,50 @@ namespace SofEngeneering_project.GameState
             var commands = _inputHandler.GetCommands();
             foreach (var cmd in commands) _hero.CurrentState.HandleInput(cmd, _hero);
 
-            // 2. Update alle objecten
-            for (int i = 0; i < _gameObjects.Count; i++) _gameObjects[i].Update(gameTime);
+            // 2. Update alle objecten (Hero, Enemies, Coins, etc)
+            for (int i = 0; i < _gameObjects.Count; i++)
+            {
+                _gameObjects[i].Update(gameTime);
+            }
 
             // 3. Camera volgt Hero
             _game.Camera.Follow(_hero);
 
             // --- CONTROLEER SPELSTATUS ---
 
-            // A. GAME OVER (Vallen)
+            // ---------------------------------------------------
+            // NIEUW: CHECK BOTSING MET ENEMIES
+            // ---------------------------------------------------
+            foreach (var obj in _gameObjects)
+            {
+                // Is dit object een vijand?
+                if (obj is Enemy enemy)
+                {
+                    // Raakt de Hero deze vijand?
+                    if (_hero.CollisionBox.Intersects(enemy.CollisionBox))
+                    {
+                        // GAME OVER!
+                        _game.ChangeState(new GameOverState(_game, _levelIndex));
+                        return; // Stop direct
+                    }
+                }
+            }
+
+            // B. GAME OVER (Vallen in de afgrond)
             if (_hero.Position.Y > 800)
             {
-                // Ga naar GameOverState en onthoud welk level we speelden
                 _game.ChangeState(new GameOverState(_game, _levelIndex));
             }
 
-            // B. LEVEL GEWONNEN (Coins op)
+            // C. LEVEL GEWONNEN (Coins op)
             if (_hero.CoinsRemaining == 0)
             {
-                // Is dit het laatste level? (Hier hardcoded op 2)
                 if (_levelIndex >= 2)
                 {
                     _game.ChangeState(new GameFinishedState(_game));
                 }
                 else
                 {
-                    // Ga naar volgend level scherm
                     _game.ChangeState(new LevelCompleteState(_game, _levelIndex));
                 }
             }
@@ -107,7 +131,7 @@ namespace SofEngeneering_project.GameState
             foreach (var obj in _gameObjects) obj.Draw(spriteBatch);
             spriteBatch.End();
 
-            // 3. HUD (Zonder Camera)
+            // 3. HUD (Zonder Camera, staat vast op scherm)
             spriteBatch.Begin();
             _hud.Draw(spriteBatch, _hero);
             spriteBatch.End();

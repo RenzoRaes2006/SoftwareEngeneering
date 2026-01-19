@@ -69,7 +69,7 @@ namespace SofEngeneering_project.CharacterStates
 
                         hero.Position = new Vector2(hero.Position.X, obj.CollisionBox.Top - offsetFromPos);
 
-                        hero.CurrentState = new GroundedState();
+                        hero.CurrentState = new IdleState();
                         hero.CurrentState.Enter(hero);
                         return;
                     }

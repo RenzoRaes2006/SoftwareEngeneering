@@ -1,0 +1,10 @@
+# Negeer Visual Studio tijdelijke bestanden
+.vs/
+.vscode/
+
+# Negeer Build resultaten (deze worden automatisch opnieuw gemaakt)
+bin/
+obj/
+
+# Negeer gebruikersspecifieke bestanden
+*.user
