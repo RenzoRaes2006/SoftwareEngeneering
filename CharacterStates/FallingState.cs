@@ -1,36 +1,31 @@
 ﻿using Microsoft.Xna.Framework;
-using SofEngeneering_project.Entities;
 using SofEngeneering_project.Interfaces;
 using SofEngeneering_project.Patterns;
-using System;
 
 namespace SofEngeneering_project.CharacterStates
 {
     public class FallingState : IHeroState
     {
-        public void Enter(IMovable _hero) { /* Optioneel: speel val geluid/animatie */ }
+        public void Enter(IHeroInterface hero) { }
 
-        public void HandleInput(ICommand command, IMovable movable)
+        public void HandleInput(ICommand command, IHeroInterface hero)
         {
-            var hero = movable as Hero;
+            // Niet springen tijdens vallen
+            if (command is JumpCommand) return;
 
-            // In FallingState negeren we Jump (geen dubbele sprong)
-            if (command is JumpCommand)
-            {
-                return;
-            }
-
-            // MoveLeft en MoveRight en Idle mogen wel (sturen in de lucht)
+            // Sturen in de lucht mag
             command.Execute(hero);
         }
 
-        public void Update(IMovable movable, GameTime gameTime)
+        public void Update(IHeroInterface hero, GameTime gameTime)
         {
-            var hero = movable as Hero;
-
-            // ALLEEN ZWAARTEKRACHT
-            // Geen botsingslogica hier! Dat doet Hero.cs
+            // Zwaartekracht
             hero.Velocity += new Vector2(0, 0.5f);
+
+            // De landing check gebeurt in Hero.Update (via PhysicsService) 
+            // of hier als je logic strikt wilt scheiden. 
+            // In jouw architectuur regelt PhysicsService de positie correctie 
+            // en Hero.Update() zet de state naar GroundedState als Velocity.Y 0 wordt.
         }
     }
 }

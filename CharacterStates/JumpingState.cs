@@ -1,38 +1,28 @@
 ﻿using Microsoft.Xna.Framework;
-using SofEngeneering_project.Entities;
 using SofEngeneering_project.Interfaces;
 using SofEngeneering_project.Patterns;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SofEngeneering_project.CharacterStates
 {
-    public class JumpingState: IHeroState
+    public class JumpingState : IHeroState
     {
-        public void Enter(IMovable hero) { }
+        public void Enter(IHeroInterface hero) { }
 
-        public void HandleInput(ICommand command, IMovable hero)
+        public void HandleInput(ICommand command, IHeroInterface hero)
         {
-            // STATE PATTERN: De State beslist wat er mag.
-
-            // We mogen niet nog eens springen in de lucht
+            // Niet dubbel springen
             if (command is JumpCommand) return;
 
-            // Maar we mogen WEL bewegen en stoppen (IdleCommand)
+            // Bewegen in de lucht mag wel
             command.Execute(hero);
         }
 
-        public void Update(IMovable movable, GameTime gameTime)
+        public void Update(IHeroInterface hero, GameTime gameTime)
         {
-            var hero = movable as Hero;
-
-            // Zwaartekracht
+            // Zwaartekracht toepassen
             hero.Velocity += new Vector2(0, 0.5f);
 
-            // Als we naar beneden gaan vallen
+            // Als we naar beneden gaan vallen (Velocity > 0)
             if (hero.Velocity.Y > 0)
             {
                 hero.CurrentState = new FallingState();

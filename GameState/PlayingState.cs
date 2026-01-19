@@ -4,13 +4,9 @@ using SofEngeneering_project.Entities;
 using SofEngeneering_project.Factories;
 using SofEngeneering_project.Interfaces;
 using SofEngeneering_project.Patterns;
-using SofEngeneering_project.view;
 using SofEngeneering_project.View;
-using System;
+using SofEngeneering_project.view;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SofEngeneering_project.GameState
 {
@@ -22,7 +18,6 @@ namespace SofEngeneering_project.GameState
         private InputHandler _inputHandler;
         private ScrollingBackground _background;
         private HUD _hud;
-
         private int _levelIndex;
 
         public PlayingState(Game1 game, int levelIndex)
@@ -30,13 +25,11 @@ namespace SofEngeneering_project.GameState
             _game = game;
             _levelIndex = levelIndex;
 
-            // 1. Initialiseer systemen
             _background = new ScrollingBackground(_game.BgTex, new Rectangle(0, 0, 2304, 1288), 0.5f, 0.5f);
-            _hud = new HUD(_game.GameFont, _game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height);
+            _hud = new HUD(_game.GameFont, _game.GraphicsDevice.Viewport.Width);
             _inputHandler = new InputHandler();
 
-            // 2. Level Factory aanroepen
-            // HIER IS DE AANPASSING: We geven nu ook de enemy-assets mee!
+            // Factory aanroep
             _gameObjects = LevelFactory.CreateLevel(
                 levelIndex,
                 _game.BlockTex, _game.BlockPart,
@@ -51,125 +44,108 @@ namespace SofEngeneering_project.GameState
                 _game.SurikenPart
             );
 
-            // 3. Hero maken
             _hero = new Hero(_game.KnightTex, _gameObjects);
 
-            // Coins tellen voor de HUD
+            // --- FIX: Observer registreren ---
+            _hero.RegisterObserver(_hud);
+
+            // --- FIX: Coins tellen en instellen ---
             int totalCoins = 0;
             foreach (var obj in _gameObjects) if (obj is Coin) totalCoins++;
             _hero.CoinsRemaining = totalCoins;
+            _hero.NotifyObservers(); // Update de HUD direct
 
             _gameObjects.Add(_hero);
-
-            // Camera resetten
             _game.Camera = new Camera(_game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height);
         }
 
         public void Update(GameTime gameTime)
         {
-            // 1. Input Handler
+            // 1. Input
             var commands = _inputHandler.GetCommands();
             foreach (var cmd in commands) _hero.CurrentState.HandleInput(cmd, _hero);
 
-            // 2. Update alle objecten (Hero, Enemies, Coins, etc)
-            for (int i = 0; i < _gameObjects.Count; i++)
-            {
-                _gameObjects[i].Update(gameTime);
-            }
+            // 2. Update Alles
+            for (int i = 0; i < _gameObjects.Count; i++) _gameObjects[i].Update(gameTime);
 
-            // 3. Camera volgt Hero
+            // 3. Camera
             _game.Camera.Follow(_hero);
 
-
-
-            // --------------------------------------------------------
-            // 4. NIEUW: BOTSING EN WIN/VERLIES LOGICA
-            // --------------------------------------------------------
-
-            IGameObject enemyToKill = null; // Opslag voor dode enemy
+            // 4. COMBAT & LOGICA
+            IGameObject objectToRemove = null;
 
             foreach (var obj in _gameObjects)
             {
-                // A. Check Enemy (Slijm)
-                if (obj is Enemy enemy)
-                {
-                    if (_hero.CollisionBox.Intersects(enemy.CollisionBox))
-                    {
-                        if (_hero.HasSuperJump || _hero.IsLethalJump)
-                        {
-                            // HELD WINT: Enemy gaat dood
-                            enemy.Die();
-                            enemyToKill = enemy;
+                if (obj == _hero) continue;
 
-                            // Bounce effect (stuiter omhoog)
-                            _hero.Bounce();
+                if (_hero.CollisionBox.Intersects(obj.CollisionBox))
+                {
+                    // A. Coins
+                    if (obj is Coin coin && !coin.IsCollected)
+                    {
+                        coin.IsCollected = true;
+                        _hero.CollectCoin();
+                    }
+                    // B. PowerUps
+                    else if (obj is PowerUp power && !power.IsCollected)
+                    {
+                        power.IsCollected = true;
+                        _hero.EnableSuperJump();
+                    }
+                    // C. Trap -> DOOD
+                    else if (obj is Trap)
+                    {
+                        _game.ChangeState(new GameOverState(_game, _levelIndex));
+                        return;
+                    }
+                    // D. Enemy -> KILL OF DOOD
+                    else if (obj is Enemy enemy)
+                    {
+                        // HERO KILLS ENEMY: Als Hero valt (Velocity Y > 0) EN boven de vijand zit
+                        // Marge van 20 pixels
+                        bool isFallingOnTop = _hero.Velocity.Y > 0 && _hero.CollisionBox.Bottom < enemy.CollisionBox.Top + 20;
+
+                        if (isFallingOnTop)
+                        {
+                            enemy.Die();
+                            _hero.Bounce(); // Stuiter
+                            objectToRemove = enemy;
                         }
                         else
                         {
-                            // HELD VERLIEST: Game Over
+                            // Aangeraakt aan zijkant of onderkant -> Hero Dood
                             _game.ChangeState(new GameOverState(_game, _levelIndex));
                             return;
                         }
                     }
                 }
-
-                // B. Check Trap (MovingBlock) -> ALTIJD DOOD
-                else if (obj is Trap trap)
-                {
-                    if (_hero.CollisionBox.Intersects(trap.CollisionBox))
-                    {
-                        _game.ChangeState(new GameOverState(_game, _levelIndex));
-                        return;
-                    }
-                }
             }
 
-            // Verwijder de dode enemy veilig uit de lijst
-            if (enemyToKill != null)
-            {
-                _gameObjects.Remove(enemyToKill);
-                // Als je in Hero.cs ook een lijst 'LevelObjects' hebt, 
-                // verwijdert hij hem daar automatisch ook uit als het dezelfde lijst is.
-                // Zo niet, moet je _hero.LevelObjects.Remove(enemyToKill) ook doen.
-            }
+            if (objectToRemove != null) _gameObjects.Remove(objectToRemove);
 
-            // --------------------------------------------------------
+            // 5. Game Over (Vallen)
+            if (_hero.Position.Y > 800) _game.ChangeState(new GameOverState(_game, _levelIndex));
 
-            // B. GAME OVER (Vallen in de afgrond)
-            if (_hero.Position.Y > 800)
-            {
-                _game.ChangeState(new GameOverState(_game, _levelIndex));
-            }
-
-            // C. LEVEL GEWONNEN (Coins op)
+            // 6. Win Condition (Munten op)
             if (_hero.CoinsRemaining == 0)
             {
-                if (_levelIndex >= 2)
-                {
-                    _game.ChangeState(new GameFinishedState(_game));
-                }
-                else
-                {
-                    _game.ChangeState(new LevelCompleteState(_game, _levelIndex));
-                }
+                if (_levelIndex >= 2) _game.ChangeState(new GameFinishedState(_game));
+                else _game.ChangeState(new LevelCompleteState(_game, _levelIndex));
             }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            // 1. Achtergrond
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             _background.Draw(spriteBatch, _game.Camera);
             spriteBatch.End();
 
-            // 2. Wereld (Met Camera)
             spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _game.Camera.Transform);
             foreach (var obj in _gameObjects) obj.Draw(spriteBatch);
             spriteBatch.End();
 
-            // 3. HUD (Zonder Camera, staat vast op scherm)
             spriteBatch.Begin();
-            _hud.Draw(spriteBatch, _hero);
+            _hud.Draw(spriteBatch);
             spriteBatch.End();
         }
     }

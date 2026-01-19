@@ -2,36 +2,25 @@
 using SofEngeneering_project.Entities;
 using SofEngeneering_project.Interfaces;
 using SofEngeneering_project.Patterns;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SofEngeneering_project.CharacterStates
 {
     public class IdleState : IHeroState
     {
-        public void Enter(IMovable movable)
+        public void Enter(IHeroInterface hero)
         {
-            var hero = movable as Hero;
             // 1. Zet direct stil
             hero.Velocity = new Vector2(0, hero.Velocity.Y);
             // 2. Start de animatie
             hero.SetIdleAnimation();
         }
 
-        public void HandleInput(ICommand command, IMovable movable)
+        public void HandleInput(ICommand command, IHeroInterface hero)
         {
-            var hero = movable as Hero;
-
             // Als we input krijgen om te bewegen -> Ga naar RunningState
             if (command is MoveLeftCommand || command is MoveRightCommand)
             {
-                // Voer het alvast uit zodat we niet 1 frame vertraging hebben
                 command.Execute(hero);
-
-                // Wissel van state
                 hero.CurrentState = new RunningState();
                 hero.CurrentState.Enter(hero);
             }
@@ -45,10 +34,9 @@ namespace SofEngeneering_project.CharacterStates
             }
         }
 
-        public void Update(IMovable movable, GameTime gameTime)
+        public void Update(IHeroInterface hero, GameTime gameTime)
         {
-            var hero = movable as Hero;
-            // Check of we nog op de grond staan (voor bewegende platformen of vallen)
+            // Check of we nog op de grond staan
             if (!CheckIfGrounded(hero))
             {
                 hero.CurrentState = new FallingState();
@@ -56,17 +44,20 @@ namespace SofEngeneering_project.CharacterStates
             }
         }
 
-        // Jouw bestaande check methode (gekopieerd uit GroundedState)
-        private bool CheckIfGrounded(Hero hero)
+        private bool CheckIfGrounded(IHeroInterface hero)
         {
             Rectangle footCheck = new Rectangle(hero.CollisionBox.X + 5, hero.CollisionBox.Bottom, hero.CollisionBox.Width - 10, 1);
             foreach (var obj in hero.LevelObjects)
             {
-                if (obj == hero || obj is PowerUp || obj is Coin) continue;
+                // Let op: hier moeten we wel checken wat voor type het object is
+                if (obj == hero || obj is PowerUp || obj is Coin || obj is Enemy || obj is Trap) continue;
+
+                // Gate check (optioneel, als je GateBlock gebruikt)
+                if (obj is BigWall gate && !gate.IsActive) continue;
+
                 if (footCheck.Intersects(obj.CollisionBox)) return true;
             }
             return false;
         }
     }
 }
-

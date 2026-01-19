@@ -1,20 +1,16 @@
-﻿using SofEngeneering_project.Entities;
-using SofEngeneering_project.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SofEngeneering_project.Interfaces;
 
 namespace SofEngeneering_project.Patterns
 {
-    public class JumpCommand: ICommand
+    public class JumpCommand : ICommand
     {
-        public void Execute(IMovable hero)
+        public void Execute(IMovable movable)
         {
-            // We geven alleen het signaal door aan de Hero class
-            if (hero is Hero h) h.WantsToJump = true;
+            // We checken of het object een Hero is (via de interface)
+            if (movable is IHeroInterface hero)
+            {
+                hero.WantsToJump = true;
+            }
         }
-
     }
 }

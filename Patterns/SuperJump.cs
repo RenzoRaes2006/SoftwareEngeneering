@@ -13,9 +13,11 @@ namespace SofEngeneering_project.Patterns
         public SuperJump(IJumpStrategy strategy) : base(strategy)
         {
         }
-        public override float CalculateJump(float velocity)
+
+        public override float CalculateJump(float currentVelocityY)
         {
-            return base.CalculateJump(velocity) * 1.5f;
+            // Decorator patroon: Voer origineel uit en doe er iets extra's mee (x 1.5)
+            return base.CalculateJump(currentVelocityY) * 1.5f;
         }
     }
 }

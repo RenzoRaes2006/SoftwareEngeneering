@@ -1,31 +1,24 @@
 ﻿using Microsoft.Xna.Framework;
 using SofEngeneering_project.Entities;
 using SofEngeneering_project.Interfaces;
-using SofEngeneering_project.CharacterStates; // Zorg dat JumpingState/FallingState hierin staan
 using System;
 
 namespace SofEngeneering_project.CharacterStates
 {
     public class GroundedState : IHeroState
     {
-        public void Enter(IMovable movable)
+        public void Enter(IHeroInterface hero)
         {
-            var hero = movable as Hero;
-
-            // Stop verticale snelheid bij landen
+            // Stop verticale snelheid
             hero.Velocity = new Vector2(hero.Velocity.X, 0);
-
-            // Zet animatie op stilstaan
             hero.SetIdleAnimation();
         }
 
-        public void HandleInput(ICommand command, IMovable movable)
+        public void HandleInput(ICommand command, IHeroInterface hero)
         {
-            command.Execute(movable);
-            var hero = movable as Hero;
+            command.Execute(hero);
 
-            // KIES ANIMATIE OP BASIS VAN SNELHEID
-            // We gebruiken hier de nieuwe hulpmethodes van Hero
+            // Animatie wissel
             if (Math.Abs(hero.Velocity.X) > 0.1f)
             {
                 hero.SetRunAnimation();
@@ -35,37 +28,26 @@ namespace SofEngeneering_project.CharacterStates
                 hero.SetIdleAnimation();
             }
 
-            // SPRINGEN
+            // Springen
             if (hero.WantsToJump)
             {
                 hero.PerformJump();
-
-                // Wissel naar JumpingState
                 hero.CurrentState = new JumpingState();
                 hero.CurrentState.Enter(hero);
             }
         }
 
-        public void Update(IMovable movable, GameTime gameTime)
+        public void Update(IHeroInterface hero, GameTime gameTime)
         {
-            var hero = movable as Hero;
-
-            // --- CHECK OF WE NOG OP DE GROND STAAN ---
+            // Ground check
             Rectangle currentHitbox = hero.CollisionBox;
-
-            // We checken een dun lijntje (1px hoog) precies onder de voeten
-            Rectangle footCheck = new Rectangle(
-                currentHitbox.X + 5,
-                currentHitbox.Bottom,
-                currentHitbox.Width - 10,
-                1
-            );
+            Rectangle footCheck = new Rectangle(currentHitbox.X + 5, currentHitbox.Bottom, currentHitbox.Width - 10, 1);
 
             bool onGround = false;
             foreach (var obj in hero.LevelObjects)
             {
-                if (obj == hero) continue;
-                if (obj is PowerUp) continue;
+                if (obj == hero || obj is PowerUp || obj is Coin || obj is Enemy || obj is Trap) continue;
+                if (obj is BigWall gate && !gate.IsActive) continue;
 
                 if (footCheck.Intersects(obj.CollisionBox))
                 {
@@ -74,7 +56,6 @@ namespace SofEngeneering_project.CharacterStates
                 }
             }
 
-            // Als we geen grond meer voelen, vallen we
             if (!onGround)
             {
                 hero.CurrentState = new FallingState();

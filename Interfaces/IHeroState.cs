@@ -9,8 +9,8 @@ namespace SofEngeneering_project.Interfaces
 {
     public interface IHeroState
     {
-        void HandleInput(ICommand command, IMovable hero);
-        void Update(IMovable hero, GameTime gameTime);
-        void Enter(IMovable hero); // Wordt aangeroepen als de state start
+        void HandleInput(ICommand command, IHeroInterface hero);
+        void Update(IHeroInterface hero, GameTime gameTime);
+        void Enter(IHeroInterface hero);
     }
 }
