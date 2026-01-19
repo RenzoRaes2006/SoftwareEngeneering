@@ -15,7 +15,6 @@ namespace SofEngeneering_project.Patterns
         }
         public override float CalculateJump(float velocity)
         {
-            // Roep het origineel aan (bijv NormalJump) en doe er 50% bij
             return base.CalculateJump(velocity) * 1.5f;
         }
     }

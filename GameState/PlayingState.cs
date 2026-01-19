@@ -43,11 +43,12 @@ namespace SofEngeneering_project.GameState
                 _game.PowerUpTex, _game.PowerUpPart,
                 _game.CoinTex, _game.CoinPart,
                 _game.CoinFrames,
-                // NIEUWE ARGUMENTEN:
                 _game.GreenSlimeTex,
                 _game.greenSlimeFrames,
                 _game.PurpleSlimeTex,
-                _game.purpleSlimeFrames
+                _game.purpleSlimeFrames,
+                _game.SurikenTex,
+                _game.SurikenPart
             );
 
             // 3. Hero maken
@@ -79,25 +80,59 @@ namespace SofEngeneering_project.GameState
             // 3. Camera volgt Hero
             _game.Camera.Follow(_hero);
 
-            // --- CONTROLEER SPELSTATUS ---
 
-            // ---------------------------------------------------
-            // NIEUW: CHECK BOTSING MET ENEMIES
-            // ---------------------------------------------------
+
+            // --------------------------------------------------------
+            // 4. NIEUW: BOTSING EN WIN/VERLIES LOGICA
+            // --------------------------------------------------------
+
+            IGameObject enemyToKill = null; // Opslag voor dode enemy
+
             foreach (var obj in _gameObjects)
             {
-                // Is dit object een vijand?
+                // A. Check Enemy (Slijm)
                 if (obj is Enemy enemy)
                 {
-                    // Raakt de Hero deze vijand?
                     if (_hero.CollisionBox.Intersects(enemy.CollisionBox))
                     {
-                        // GAME OVER!
+                        if (_hero.HasSuperJump)
+                        {
+                            // HELD WINT: Enemy gaat dood
+                            enemyToKill = enemy;
+
+                            // Bounce effect (stuiter omhoog)
+                            _hero.Velocity = new Vector2(_hero.Velocity.X, -10f);
+                        }
+                        else
+                        {
+                            // HELD VERLIEST: Game Over
+                            _game.ChangeState(new GameOverState(_game, _levelIndex));
+                            return;
+                        }
+                    }
+                }
+
+                // B. Check Trap (MovingBlock) -> ALTIJD DOOD
+                else if (obj is Trap trap)
+                {
+                    if (_hero.CollisionBox.Intersects(trap.CollisionBox))
+                    {
                         _game.ChangeState(new GameOverState(_game, _levelIndex));
-                        return; // Stop direct
+                        return;
                     }
                 }
             }
+
+            // Verwijder de dode enemy veilig uit de lijst
+            if (enemyToKill != null)
+            {
+                _gameObjects.Remove(enemyToKill);
+                // Als je in Hero.cs ook een lijst 'LevelObjects' hebt, 
+                // verwijdert hij hem daar automatisch ook uit als het dezelfde lijst is.
+                // Zo niet, moet je _hero.LevelObjects.Remove(enemyToKill) ook doen.
+            }
+
+            // --------------------------------------------------------
 
             // B. GAME OVER (Vallen in de afgrond)
             if (_hero.Position.Y > 800)

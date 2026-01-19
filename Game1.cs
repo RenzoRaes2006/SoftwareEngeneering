@@ -25,10 +25,11 @@ namespace SofEngeneering_project
         public SpriteFont GameFont;
         public Texture2D GreenSlimeTex;
         public Texture2D PurpleSlimeTex;
+        public Texture2D SurikenTex;
 
         // Data voor de factory
         public List<Rectangle> CoinFrames, greenSlimeFrames, purpleSlimeFrames;
-        public Rectangle BlockPart, PowerUpPart, CoinPart;
+        public Rectangle BlockPart, PowerUpPart, CoinPart, SurikenPart;
 
         // De Camera delen we publiek
         public Camera Camera;
@@ -60,12 +61,14 @@ namespace SofEngeneering_project
             GameFont = Content.Load<SpriteFont>("GameFont");
             GreenSlimeTex = Content.Load<Texture2D>("slime_green");
             PurpleSlimeTex = Content.Load<Texture2D>("slime_purple");
+            SurikenTex = Content.Load<Texture2D>("Suriken");
 
 
             // 2. SETUP DATA RECTANGLES
             BlockPart = new Rectangle(0, 0, 434, 768); // Pas aan naar jouw uitsnede
             PowerUpPart = new Rectangle(0, 0, 16, 16);
             CoinPart = new Rectangle(3, 3, 10, 10);
+            SurikenPart = new Rectangle(0, 0, 32, 32);
 
             CoinFrames = new List<Rectangle>
             {

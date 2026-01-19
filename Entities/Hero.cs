@@ -25,7 +25,9 @@ namespace SofEngeneering_project.Entities
         public float CoinFeedbackTimer { get; private set; } = 0f;
 
         // Interne flags
-        private bool _hasSuperJump = false;
+        public bool HasSuperJump { get; private set; } = false;
+        public bool IsLethalJump { get; private set; } = false;
+
         private List<IGameObserver> _observers = new List<IGameObserver>();
         public bool WantsToJump { get; set; }
 
@@ -101,10 +103,10 @@ namespace SofEngeneering_project.Entities
             WantsToJump = false;
 
             // PowerUp
-            if (_hasSuperJump)
+            if (HasSuperJump)
             {
                 PowerUpTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-                if (PowerUpTimer <= 0) RemoveSuperJump();
+                if (PowerUpTimer <= 0 && !IsLethalJump) RemoveSuperJump();
             }
 
             // Animatie & State
@@ -184,27 +186,38 @@ namespace SofEngeneering_project.Entities
         {
             float jumpForce = JumpStrategy.CalculateJump(Velocity.Y);
             Velocity = new Vector2(Velocity.X, jumpForce);
+            // LOGICA: Als we NU de powerup hebben, is deze sprong dodelijk tot we landen.
+            if (HasSuperJump)
+            {
+                IsLethalJump = true;
+            }
+            else
+            {
+                IsLethalJump = false;
+            }
         }
 
         public void EnableSuperJump()
         {
-            if (!_hasSuperJump)
+            if (!HasSuperJump)
             {
                 JumpStrategy = new SuperJump(JumpStrategy);
-                _hasSuperJump = true;
+                HasSuperJump = true;
             }
-            PowerUpTimer = 5.0f;
+            PowerUpTimer = 2.0f;
         }
 
         private void RemoveSuperJump()
         {
-            if (_hasSuperJump)
+            if (HasSuperJump)
             {
                 JumpStrategy = new NormalJumpStrategy();
-                _hasSuperJump = false;
+                HasSuperJump = false;
                 PowerUpTimer = 0;
             }
         }
+
+
 
         public void AddObserver(IGameObserver observer) => _observers.Add(observer);
 
@@ -216,7 +229,7 @@ namespace SofEngeneering_project.Entities
             Rectangle myRect = CollisionBox;
             foreach (var obj in LevelObjects)
             {
-                if (obj == this || obj is PowerUp || obj is Coin || obj is Enemy) continue;
+                if (obj == this || obj is PowerUp || obj is Coin || obj is Enemy ||obj is Trap) continue;
                 if (Velocity.Y < 0) continue; // One-way platform
 
                 if (myRect.Intersects(obj.CollisionBox))
@@ -234,40 +247,57 @@ namespace SofEngeneering_project.Entities
         private void HandleVerticalCollision()
         {
             Rectangle myRect = CollisionBox;
+
             foreach (var obj in LevelObjects)
             {
-                if (obj == this || obj is PowerUp || obj is Coin || obj is Enemy) continue;
-                if (Velocity.Y < 0) continue; // Spring door platformen heen
+                // 1. Negeer objecten waar je doorheen mag (inclusief PowerUps!)
+                if (obj == this || obj is PowerUp || obj is Coin || obj is Enemy || obj is Trap) continue;
 
                 if (myRect.Intersects(obj.CollisionBox))
                 {
-                    // LANDEN
+                    // 2. SPRINGEN DOOR BLOKKEN (Velocity < 0)
+                    // Als we omhoog gaan, doen we... NIETS.
+                    // De 'continue' zorgt dat we de botsing negeren en er dwars doorheen vliegen.
+                    if (Velocity.Y < 0)
+                    {
+                        continue;
+                    }
+
+                    // 3. LANDEN OP BLOKKEN (Velocity > 0)
+                    // We mogen alleen landen als we aan het vallen zijn.
                     if (Velocity.Y > 0)
                     {
-                        // Zet positie op het blok
-                        float newY = obj.CollisionBox.Top - _hitboxHeight - _offsetY;
-                        Position = new Vector2(Position.X, newY);
+                        Rectangle overlap = Rectangle.Intersect(myRect, obj.CollisionBox);
 
-                        Velocity = new Vector2(Velocity.X, 0);
+                        // --- DE ECHTE FIX ---
+                        // We moeten checken: "Raak ik het blok met mijn voeten?"
+                        // Als we midden in een sprong zitten (en dus 'in' het blok zweven), 
+                        // is onze onderkant (Bottom) veel lager dan de bovenkant van het blok.
 
-                        // State switch: Als we vielen, ga nu naar Idle of Running
-                        if (CurrentState is FallingState)
+                        // Formule: Zit de onderkant van de Hero (minus de overlap) ongeveer op de bovenkant van het blok?
+                        // We geven 8 pixels speling.
+                        if (myRect.Bottom - overlap.Height <= obj.CollisionBox.Top + 8)
                         {
-                            if (Math.Abs(Velocity.X) > 0.1f)
+                            // JA! We zitten er bovenop. Landen maar.
+                            Position = new Vector2(Position.X, obj.CollisionBox.Top - CollisionBox.Height);
+                            Velocity = new Vector2(Velocity.X, 0);
+
+                            IsLethalJump = false;
+                            if (PowerUpTimer <= 0 && HasSuperJump)
                             {
-                                CurrentState = new RunningState();
-                                CurrentState.Enter(this);
+                                RemoveSuperJump();
                             }
-                            else
-                            {
-                                CurrentState = new IdleState();
-                                CurrentState.Enter(this);
-                            }
+                            // Wissel naar GroundedState
+                            CurrentState = new GroundedState();
+                            CurrentState.Enter(this);
                         }
+                        // NEE? Dan zitten we er waarschijnlijk middenin (tijdens het omhoog springen).
+                        // Doe niets en laat de speler gewoon vallen tot hij er wel op staat.
                     }
                 }
             }
         }
+        
 
         private void HandleObjectCollisions()
         {
