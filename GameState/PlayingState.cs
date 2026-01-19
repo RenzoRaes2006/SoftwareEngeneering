@@ -31,7 +31,7 @@ namespace SofEngeneering_project.GameState
             _levelIndex = levelIndex;
 
             // 1. Initialiseer systemen
-            _background = new ScrollingBackground(_game.BgTex, new Rectangle(0, 0, 16, 32), 0.5f, 4.0f);
+            _background = new ScrollingBackground(_game.BgTex, new Rectangle(0, 0, 2304, 1288), 0.5f, 0.5f);
             _hud = new HUD(_game.GameFont, _game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height);
             _inputHandler = new InputHandler();
 
@@ -95,13 +95,14 @@ namespace SofEngeneering_project.GameState
                 {
                     if (_hero.CollisionBox.Intersects(enemy.CollisionBox))
                     {
-                        if (_hero.HasSuperJump)
+                        if (_hero.HasSuperJump || _hero.IsLethalJump)
                         {
                             // HELD WINT: Enemy gaat dood
+                            enemy.Die();
                             enemyToKill = enemy;
 
                             // Bounce effect (stuiter omhoog)
-                            _hero.Velocity = new Vector2(_hero.Velocity.X, -10f);
+                            _hero.Bounce();
                         }
                         else
                         {

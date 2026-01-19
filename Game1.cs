@@ -13,6 +13,8 @@ namespace SofEngeneering_project
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        public Texture2D PixelTexture { get; private set; } 
+
         // DE HUIDIGE STATE
         private IGameState _currentState;
 
@@ -45,7 +47,8 @@ namespace SofEngeneering_project
         {
             // Camera initialiseren
             Camera = new Camera(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-            base.Initialize();
+            IsMouseVisible = true;
+            base.Initialize();  
         }
 
         protected override void LoadContent()
@@ -55,7 +58,7 @@ namespace SofEngeneering_project
             // 1. LAAD ALLE ASSETS ÉÉN KEER
             KnightTex = Content.Load<Texture2D>("knight");
             BlockTex = Content.Load<Texture2D>("Block");
-            BgTex = Content.Load<Texture2D>("Background_2");
+            BgTex = Content.Load<Texture2D>("Summer2");
             PowerUpTex = Content.Load<Texture2D>("fruit");
             CoinTex = Content.Load<Texture2D>("coin");
             GameFont = Content.Load<SpriteFont>("GameFont");
@@ -97,7 +100,8 @@ namespace SofEngeneering_project
                 new Rectangle(77, 35, 14, 13)
             };
 
-
+            PixelTexture = new Texture2D(GraphicsDevice, 1, 1);
+            PixelTexture.SetData(new[] { Color.White });
 
             // 3. START HET SPEL IN HET MENU
             _currentState = new MenuState(this);

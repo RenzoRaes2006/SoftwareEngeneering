@@ -230,7 +230,6 @@ namespace SofEngeneering_project.Entities
             foreach (var obj in LevelObjects)
             {
                 if (obj == this || obj is PowerUp || obj is Coin || obj is Enemy ||obj is Trap) continue;
-                if (Velocity.Y < 0) continue; // One-way platform
 
                 if (myRect.Intersects(obj.CollisionBox))
                 {
@@ -252,6 +251,7 @@ namespace SofEngeneering_project.Entities
             {
                 // 1. Negeer objecten waar je doorheen mag (inclusief PowerUps!)
                 if (obj == this || obj is PowerUp || obj is Coin || obj is Enemy || obj is Trap) continue;
+                if (obj is BigWall gate && !gate.IsActive) continue;
 
                 if (myRect.Intersects(obj.CollisionBox))
                 {
@@ -321,6 +321,17 @@ namespace SofEngeneering_project.Entities
                     }
                 }
             }
+        }
+
+        public void Bounce()
+        {
+            // 1. De fysieke stuiter
+            Velocity = new Vector2(Velocity.X, -10f);
+
+            // 2. De Combo-mechanic:
+            // Omdat we stuiteren, telt dit als een nieuwe, dodelijke sprong.
+            // Hierdoor kun je vijanden blijven chainen zolang je de grond niet raakt!
+            IsLethalJump = true;
         }
     }
 }

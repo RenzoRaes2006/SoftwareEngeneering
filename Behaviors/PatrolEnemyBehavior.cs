@@ -11,9 +11,8 @@ namespace SofEngeneering_project.Behaviors
     public class PatrolEnemyBehavior : IMovementEnemy
     {
         private float _speed;
-        private bool _movingRight = true;
+        private bool _movingRight = true; // Houdt de richting bij
 
-        // Geen start/eind coördinaten meer nodig!
         public PatrolEnemyBehavior(float speed)
         {
             _speed = speed;
@@ -21,19 +20,19 @@ namespace SofEngeneering_project.Behaviors
 
         public Vector2 Move(Vector2 currentPosition, GameTime gameTime)
         {
-            float x = currentPosition.X;
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            // Gewoon oneindig doorlopen... tot we botsen
-            if (_movingRight) x += _speed;
-            else x -= _speed;
-
-            return new Vector2(x, currentPosition.Y);
+            // Beweeg links of rechts op basis van de boolean
+            if (_movingRight)
+                return new Vector2(currentPosition.X + _speed, currentPosition.Y);
+            else
+                return new Vector2(currentPosition.X - _speed, currentPosition.Y);
         }
 
-        // HIER GEBEURT HET:
+        // Deze wordt aangeroepen door Enemy.cs als er een MUUR geraakt wordt
         public void OnHorizontalCollision()
         {
-            _movingRight = !_movingRight; // Draai de richting om
+            _movingRight = !_movingRight; // Draai om
         }
     }
 }

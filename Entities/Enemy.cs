@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SofEngeneering_project.Interfaces;
+using System;
 using System.Collections.Generic;
 
 namespace SofEngeneering_project.Entities
@@ -11,6 +12,8 @@ namespace SofEngeneering_project.Entities
         public Vector2 Position { get; private set; }
         public Rectangle CollisionBox { get; private set; }
 
+        public event Action OnDeath;
+
         // --- ANIMATIE ---
         private List<Rectangle> _frames;
         private int _currentFrame = 0;
@@ -20,12 +23,14 @@ namespace SofEngeneering_project.Entities
 
         // --- SCHAAL & COLLISION ---
         private float _scale;
-        private List<IGameObject> _levelObjects; // Referentie naar de wereld
+
+        // We maken deze public (property), handig voor debugging of behaviors
+        public List<IGameObject> LevelObjects { get; private set; }
 
         // --- GEDRAG ---
         private IMovementEnemy _moveBehavior;
 
-        // Constructor aangepast: accepteert nu 'levelObjects'
+        // Constructor
         public Enemy(Texture2D texture, Vector2 startPosition, List<Rectangle> frames, IMovementEnemy moveBehavior, float scale, List<IGameObject> levelObjects)
         {
             Texture = texture;
@@ -33,7 +38,7 @@ namespace SofEngeneering_project.Entities
             _frames = frames;
             _moveBehavior = moveBehavior;
             _scale = scale;
-            _levelObjects = levelObjects;
+            LevelObjects = levelObjects;
 
             // 1. Bereken max hoogte voor hitbox
             _maxHeight = 0;
@@ -57,34 +62,41 @@ namespace SofEngeneering_project.Entities
             UpdateCollisionBox();
 
             // 2. BOTSING CHECKEN MET MUREN
-            foreach (var obj in _levelObjects)
+            foreach (var obj in LevelObjects)
             {
-                // Negeer zichzelf, coins en powerups (daar lopen we doorheen)
-                if (obj == this || obj is Coin || obj is PowerUp || obj is Hero) continue;
+                // A. Negeer jezelf
+                if (obj == this) continue;
 
+                // B. FILTER: Negeer alles waar we doorheen mogen lopen.
+                // HIER ZIT DE FIX: We hebben 'Enemy' en 'Trap' toegevoegd.
+                // Nu botst hij NIET meer tegen de Grote Paarse Slime.
+                if (obj is Coin || obj is PowerUp || obj is Hero || obj is Enemy || obj is Trap)
+                {
+                    continue;
+                }
+
+                // C. Check botsing met wat overblijft (dus Block en GateBlock)
                 if (CollisionBox.Intersects(obj.CollisionBox))
                 {
-                    // -- BOTSING GEVONDEN --
+                    // -- BOTSING MET MUUR --
 
-                    // A. Correctie: Zet de enemy strak tegen de muur aan
+                    // Correctie: Zet de enemy strak tegen de muur aan
                     if (Position.X > oldPosition.X) // We bewogen naar rechts
                     {
-                        // Zet rechtskant van enemy tegen linkerkant van muur
                         Position = new Vector2(obj.CollisionBox.Left - CollisionBox.Width, Position.Y);
                     }
                     else if (Position.X < oldPosition.X) // We bewogen naar links
                     {
-                        // Zet linkerkant van enemy tegen rechterkant van muur
                         Position = new Vector2(obj.CollisionBox.Right, Position.Y);
                     }
 
-                    // B. Update hitbox op de gecorrigeerde positie
+                    // Update hitbox na de correctie
                     UpdateCollisionBox();
 
-                    // C. Strategie Triggeren: "Draai om!"
+                    // Vertel de Behavior dat we botsten (zodat hij kan omdraaien)
                     _moveBehavior.OnHorizontalCollision();
 
-                    break; // Stop loop na eerste botsing
+                    break; // Klaar, we hebben de muur gevonden
                 }
             }
 
@@ -116,6 +128,12 @@ namespace SofEngeneering_project.Entities
             Vector2 drawPos = new Vector2(Position.X, Position.Y + scaledOffset);
 
             spriteBatch.Draw(Texture, drawPos, currentRect, Color.White, 0f, Vector2.Zero, _scale, SpriteEffects.None, 0f);
+        }
+
+        public void Die()
+        {
+            // Roep iedereen aan die luistert (de GateKeeper)
+            OnDeath?.Invoke();
         }
     }
 }
