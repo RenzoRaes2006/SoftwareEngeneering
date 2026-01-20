@@ -68,12 +68,23 @@ namespace SofEngeneering_project.GameState
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            _game.GraphicsDevice.Clear(Color.DarkBlue);
-
             spriteBatch.Begin();
-            spriteBatch.DrawString(_game.GameFont, "Software engeneering game", new Vector2(230, 100), Color.White);
 
-            // Teken de knoppen alleen als ze bestaan
+            if (_game.MenuBackgroundTex != null)
+            {
+                // We maken een rechthoek zo groot als het scherm om de image te stretchen/fitten
+                Rectangle screenRect = new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height);
+                spriteBatch.Draw(_game.MenuBackgroundTex, screenRect, Color.White);
+            }
+            else
+            {
+                // Fallback als de image niet gevonden wordt: oude blauwe kleur
+                _game.GraphicsDevice.Clear(Color.DarkBlue);
+            }
+            // ----------------------------------------------
+
+            spriteBatch.DrawString(_game.GameFont, "Software engeneering game", new Vector2(230, 100), Color.Black);
+
             if (_startButton != null) _startButton.Draw(spriteBatch);
             if (_levelSelectButton != null) _levelSelectButton.Draw(spriteBatch);
             if (_quitButton != null) _quitButton.Draw(spriteBatch);

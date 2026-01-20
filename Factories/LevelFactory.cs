@@ -185,6 +185,12 @@ namespace SofEngeneering_project.Factories
                 var megaSlime = new Enemy(purpleEnemyTex, startPos, purpleSlimeFrames, chaseLogic, megaScale, new List<IGameObject>());
 
                 objects.Add(megaSlime);
+
+                // Trap
+                var trapBehavior3 = new TrapBehavior(3232, 3300, 2);
+                objects.Add(new Trap(SurikenTex, SurikenRect, new Vector2(3232, 272), trapBehavior3));
+                var trapBehavior4 = new TrapBehavior(3296, 3364, 2);
+                objects.Add(new Trap(SurikenTex, SurikenRect, new Vector2(3364, 236), trapBehavior4));
             }
 
             return objects;

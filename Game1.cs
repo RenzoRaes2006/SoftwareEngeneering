@@ -28,6 +28,7 @@ namespace SofEngeneering_project
         public Texture2D GreenSlimeTex;
         public Texture2D PurpleSlimeTex;
         public Texture2D SurikenTex;
+        public Texture2D MenuBackgroundTex;
 
         // Data voor de factory
         public List<Rectangle> CoinFrames, greenSlimeFrames, purpleSlimeFrames;
@@ -65,7 +66,7 @@ namespace SofEngeneering_project
             GreenSlimeTex = Content.Load<Texture2D>("slime_green");
             PurpleSlimeTex = Content.Load<Texture2D>("slime_purple");
             SurikenTex = Content.Load<Texture2D>("Suriken");
-
+            MenuBackgroundTex = Content.Load<Texture2D>("Summer5");
 
             // 2. SETUP DATA RECTANGLES
             BlockPart = new Rectangle(0, 0, 434, 768); // Pas aan naar jouw uitsnede

@@ -36,9 +36,6 @@ namespace SofEngeneering_project.Entities
         private int[] _idleXCoords = { 18, 82, 146, 210 };
         private int[] _runXCoords = { 16, 82, 146, 210, 272, 338, 402, 466 };
 
-        // Hoogtes voor correcte tekening (Idle is hoger dan Run)
-        private int _runHeight = 36;
-        private int _idleHeight = 38;
 
         public Hero(Texture2D texture, List<IGameObject> levelObjects)
         {
@@ -117,11 +114,6 @@ namespace SofEngeneering_project.Entities
                             Velocity = new Vector2(Velocity.X, 0);
                             onGround = true;
                         }
-                    }
-                    else if (Velocity.Y < 0) // Hoofd stoten (optioneel)
-                    {
-                        // Position = new Vector2(Position.X, obj.CollisionBox.Bottom);
-                        // Velocity = new Vector2(Velocity.X, 0);
                     }
                 }
             }
