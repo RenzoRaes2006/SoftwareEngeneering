@@ -29,10 +29,14 @@ namespace SofEngeneering_project
         public Texture2D PurpleSlimeTex;
         public Texture2D SurikenTex;
         public Texture2D MenuBackgroundTex;
+        public Texture2D ChooseLevelBackgroundTex;
+        public Texture2D HeartTex;
+
+
 
         // Data voor de factory
         public List<Rectangle> CoinFrames, greenSlimeFrames, purpleSlimeFrames;
-        public Rectangle BlockPart, PowerUpPart, CoinPart, SurikenPart;
+        public Rectangle BlockPart, PowerUpPart, CoinPart, SurikenPart, WallPart;
 
         // De Camera delen we publiek
         public Camera Camera;
@@ -58,7 +62,7 @@ namespace SofEngeneering_project
 
             // 1. LAAD ALLE ASSETS ÉÉN KEER
             KnightTex = Content.Load<Texture2D>("knight");
-            BlockTex = Content.Load<Texture2D>("Block");
+            BlockTex = Content.Load<Texture2D>("TX Tileset Ground");
             BgTex = Content.Load<Texture2D>("Summer2");
             PowerUpTex = Content.Load<Texture2D>("fruit");
             CoinTex = Content.Load<Texture2D>("coin");
@@ -67,12 +71,15 @@ namespace SofEngeneering_project
             PurpleSlimeTex = Content.Load<Texture2D>("slime_purple");
             SurikenTex = Content.Load<Texture2D>("Suriken");
             MenuBackgroundTex = Content.Load<Texture2D>("Summer5");
+            ChooseLevelBackgroundTex = Content.Load<Texture2D>("Summer6");
+            HeartTex = Content.Load<Texture2D>("heart");
 
             // 2. SETUP DATA RECTANGLES
-            BlockPart = new Rectangle(0, 0, 434, 768); // Pas aan naar jouw uitsnede
+            BlockPart = new Rectangle(0, 384, 96, 12);
             PowerUpPart = new Rectangle(0, 0, 16, 16);
             CoinPart = new Rectangle(3, 3, 10, 10);
             SurikenPart = new Rectangle(0, 0, 32, 32);
+            WallPart = new Rectangle(0, 255, 32, 96);
 
             CoinFrames = new List<Rectangle>
             {

@@ -7,65 +7,78 @@ namespace SofEngeneering_project.Services
 {
     public static class PhysicsService
     {
-        public static void CheckHorizontalCollision(IMovable entity, Rectangle entityBox, List<IGameObject> objects)
+        public static void MoveX(Hero hero, List<IGameObject> objects)
         {
+            hero.Position += new Vector2(hero.Velocity.X, 0);
+            Rectangle hb = hero.CollisionBox;
             foreach (var obj in objects)
             {
-                if (obj == entity) continue;
-
-                // --- FIX: Negeer collision tussen Hero en Enemy ---
-                // Hierdoor draaien enemies niet meer om als ze je raken, 
-                // maar lopen ze 'in' je zodat de Game Over check kan werken.
-                if (obj is Coin || obj is PowerUp || obj is Trap) continue;
-                if (entity is Hero && obj is Enemy) continue;
-                if (entity is Enemy && obj is Enemy) continue;
-                if (entity is Enemy && obj is Hero) continue; // <--- DEZE ONTBREKTE!
-
-                // Gate logica
-                if (obj is BigWall gate && !gate.IsActive) continue;
-
-                if (entityBox.Intersects(obj.CollisionBox))
+                if (obj is Block || (obj is BigWall gate && gate.IsActive))
                 {
-                    if (entity.Velocity.X > 0)
-                        entity.Position = new Vector2(obj.CollisionBox.Left - entityBox.Width, entity.Position.Y);
-                    else if (entity.Velocity.X < 0)
-                        entity.Position = new Vector2(obj.CollisionBox.Right, entity.Position.Y);
-
-                    entity.Velocity = new Vector2(0, entity.Velocity.Y);
-
-                    // Enemy draait om bij muur
-                    if (entity is Enemy enemy) enemy.MovementStrategy.OnHorizontalCollision();
+                    if (hb.Intersects(obj.CollisionBox))
+                    {
+                        if (hero.Velocity.X > 0) hero.Position = new Vector2(obj.CollisionBox.Left - hb.Width, hero.Position.Y);
+                        else if (hero.Velocity.X < 0) hero.Position = new Vector2(obj.CollisionBox.Right, hero.Position.Y);
+                    }
                 }
             }
         }
 
-        public static bool CheckVerticalCollision(IMovable entity, Rectangle entityBox, List<IGameObject> objects)
+        public static bool MoveY(Hero hero, List<IGameObject> objects)
         {
-            bool isGrounded = false;
-
+            hero.Position += new Vector2(0, hero.Velocity.Y);
+            Rectangle hb = hero.CollisionBox;
+            bool grounded = false;
             foreach (var obj in objects)
             {
-                if (obj == entity) continue;
-                if (obj is Coin || obj is PowerUp || obj is Trap) continue;
-                if (entity is Hero && obj is Enemy) continue;
-                if (entity is Enemy && obj is Hero) continue; // <--- DEZE OOK TOEVOEGEN
-
-                if (obj is BigWall gate && !gate.IsActive) continue;
-
-                if (entityBox.Intersects(obj.CollisionBox))
+                if (obj is Block || (obj is BigWall gate && gate.IsActive))
                 {
-                    if (entity.Velocity.Y < 0) continue;
-
-                    Rectangle overlap = Rectangle.Intersect(entityBox, obj.CollisionBox);
-                    if (entity.Velocity.Y >= 0 && (entityBox.Bottom - overlap.Height) <= obj.CollisionBox.Top + 10)
+                    if (hb.Intersects(obj.CollisionBox))
                     {
-                        entity.Position = new Vector2(entity.Position.X, obj.CollisionBox.Top - entityBox.Height);
-                        entity.Velocity = new Vector2(entity.Velocity.X, 0);
-                        isGrounded = true;
+                        if (hero.Velocity.Y > 0 && hb.Bottom <= obj.CollisionBox.Top + hero.Velocity.Y + 2)
+                        {
+                            hero.Position = new Vector2(hero.Position.X, obj.CollisionBox.Top - hb.Height);
+                            hero.Velocity = new Vector2(hero.Velocity.X, 0);
+                            grounded = true;
+                        }
                     }
                 }
             }
-            return isGrounded;
+            return grounded;
+        }
+
+        public static void HandleEnemyPhysics(Enemy enemy, List<IGameObject> objects)
+        {
+            if (enemy == null || enemy.IsDead) return;
+
+            Rectangle eb = enemy.CollisionBox;
+            bool onGround = false;
+
+            foreach (var obj in objects)
+            {
+                if (obj is Block || (obj is BigWall gate && gate.IsActive))
+                {
+                    if (eb.Intersects(obj.CollisionBox))
+                    {
+                        // SOLID fix: De Boss heeft door zijn 10x schaal een grotere marge nodig (45px) 
+                        // om trillen op dunne blokken te voorkomen.
+                        int margin = (enemy is Boss) ? 45 : 15;
+
+                        if (eb.Bottom >= obj.CollisionBox.Top && eb.Bottom <= obj.CollisionBox.Top + margin)
+                        {
+                            enemy.Position = new Vector2(enemy.Position.X, obj.CollisionBox.Top - eb.Height);
+                            onGround = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!onGround)
+            {
+                float gravity = (enemy is Boss) ? 2.5f : 4f;
+                enemy.Position = new Vector2(enemy.Position.X, enemy.Position.Y + gravity);
+            }
         }
     }
 }

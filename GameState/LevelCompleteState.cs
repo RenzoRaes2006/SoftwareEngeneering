@@ -2,34 +2,36 @@
 using Microsoft.Xna.Framework.Graphics;
 using SofEngeneering_project.Interfaces;
 using SofEngeneering_project.view;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SofEngeneering_project.GameState
 {
-    public class LevelCompleteState:IGameState
+    public class LevelCompleteState : IGameState
     {
         private Game1 _game;
-        private LevelCompleteScreen _screen;
+        private GenericMenuScreen _screen;
         private int _completedLevelIndex;
 
         public LevelCompleteState(Game1 game, int completedLevelIndex)
         {
             _game = game;
             _completedLevelIndex = completedLevelIndex;
-            _screen = new LevelCompleteScreen(_game.GameFont, _game.GraphicsDevice);
+
+            // Configureer voor Level Complete (Zwart/Transparant overlay)
+            _screen = new GenericMenuScreen(
+                _game.GameFont,
+                _game.GraphicsDevice,
+                "LEVEL COMPLETE!",
+                "NEXT LEVEL",
+                Color.Black * 0.7f
+            );
         }
 
         public void Update(GameTime gameTime)
         {
             string action = _screen.Update();
 
-            if (action == "Next")
+            if (action == "Action") // Action betekent hier volgend level
             {
-                // Start het volgende level
                 _game.ChangeState(new PlayingState(_game, _completedLevelIndex + 1));
             }
             else if (action == "Exit")

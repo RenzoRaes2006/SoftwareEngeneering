@@ -1,4 +1,5 @@
 ﻿using SofEngeneering_project.Interfaces;
+using System;
 
 namespace SofEngeneering_project.Patterns
 {
@@ -6,10 +7,13 @@ namespace SofEngeneering_project.Patterns
     {
         public void Execute(IMovable movable)
         {
-            // We checken of het object een Hero is (via de interface)
             if (movable is IHeroInterface hero)
             {
-                hero.WantsToJump = true;
+
+                if (Math.Abs(hero.Velocity.Y) < 0.1f)
+                {
+                    hero.WantsToJump = true;
+                }
             }
         }
     }

@@ -1,9 +1,4 @@
 ﻿using SofEngeneering_project.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SofEngeneering_project.Patterns
 {
@@ -11,7 +6,9 @@ namespace SofEngeneering_project.Patterns
     {
         public float CalculateJump(float currentVelocityY)
         {
-            return -11f; // Springkracht
+            // Verhoogd naar -15 (was -12). 
+            // Hoe negatiever, hoe harder je omhoog gaat.
+            return -10f;
         }
     }
 }

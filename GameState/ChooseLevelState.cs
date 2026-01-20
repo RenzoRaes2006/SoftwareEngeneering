@@ -69,12 +69,13 @@ namespace SofEngeneering_project.GameState
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            _game.GraphicsDevice.Clear(Color.DarkSlateGray);
-
             spriteBatch.Begin();
-            spriteBatch.DrawString(_game.GameFont, "CHOOSE LEVEL", new Vector2(320, 100), Color.White);
 
-            // Teken alleen als ze bestaan
+            Rectangle screenRect = new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height);
+            spriteBatch.Draw(_game.ChooseLevelBackgroundTex, screenRect, Color.White);
+
+            spriteBatch.DrawString(_game.GameFont, "CHOOSE LEVEL", new Vector2(320, 100), Color.Black);
+
             if (_lvl1Btn != null) _lvl1Btn.Draw(spriteBatch);
             if (_lvl2Btn != null) _lvl2Btn.Draw(spriteBatch);
             if (_backBtn != null) _backBtn.Draw(spriteBatch);

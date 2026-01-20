@@ -9,6 +9,7 @@ namespace SofEngeneering_project.CharacterStates
     {
         public void Enter(IHeroInterface hero)
         {
+            // We zetten de animatie 1 keer klaar als we beginnen met rennen
             hero.SetRunAnimation();
         }
 
@@ -38,6 +39,13 @@ namespace SofEngeneering_project.CharacterStates
 
         public void Update(IHeroInterface hero, GameTime gameTime)
         {
+            // --- HIER ZAT WAARSCHIJNLIJK DE FOUT ---
+            // Er stond vast: hero.Animatie.Update(gameTime);
+            // OF: hero.SetRunAnimation();
+            // DIE MOETEN HIER WEG!
+            // ---------------------------------------
+
+            // Check alleen of we nog grond onder de voeten hebben
             if (!CheckIfGrounded(hero))
             {
                 hero.CurrentState = new FallingState();
@@ -47,6 +55,7 @@ namespace SofEngeneering_project.CharacterStates
 
         private bool CheckIfGrounded(IHeroInterface hero)
         {
+            // Simpele check of we nog op een blok staan
             Rectangle footCheck = new Rectangle(hero.CollisionBox.X + 5, hero.CollisionBox.Bottom, hero.CollisionBox.Width - 10, 1);
             foreach (var obj in hero.LevelObjects)
             {

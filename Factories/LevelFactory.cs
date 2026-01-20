@@ -1,199 +1,175 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using SofEngeneering_project.Behaviors;
-using SofEngeneering_project.Entities;
-using SofEngeneering_project.Interfaces;
-using System.Collections.Generic;
+﻿    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+    using SofEngeneering_project.Behaviors;
+    using SofEngeneering_project.Entities;
+    using SofEngeneering_project.Interfaces;
+    using System.Collections.Generic;
 
-namespace SofEngeneering_project.Factories
-{
-    public static class LevelFactory
+    namespace SofEngeneering_project.Factories
     {
-        // Blokgrootte (standaard 64px)
-        private const int BS = 64;
-
-        public static List<IGameObject> CreateLevel(int levelIndex,Texture2D blockTex, Rectangle blockSourceRect,Texture2D powerUpTex, Rectangle powerUpRect,Texture2D CoinTex, Rectangle coinRect, List<Rectangle> coinFrames,Texture2D greenEnemyTex, List<Rectangle> greenSlimeFrames,Texture2D purpleEnemyTex, List<Rectangle> purpleSlimeFrames,Texture2D SurikenTex, Rectangle SurikenRect)
+        public static class LevelFactory
         {
-            var objects = new List<IGameObject>();
-
-            // =============================================================
-            // LEVEL 1
-            // =============================================================
-            if (levelIndex == 1)
+            // AANGEPAST: GraphicsDevice parameter toegevoegd voor de Boss HP balk
+            public static List<IGameObject> CreateLevel(
+                int levelIndex,
+                Texture2D blockTex, Rectangle blockSourceRect, Rectangle wallRect,
+                Texture2D powerUpTex, Rectangle powerUpRect,
+                Texture2D CoinTex, Rectangle coinRect, List<Rectangle> coinFrames,
+                Texture2D greenEnemyTex, List<Rectangle> greenSlimeFrames,
+                Texture2D purpleEnemyTex, List<Rectangle> purpleSlimeFrames,
+                Texture2D SurikenTex, Rectangle SurikenRect,
+                GraphicsDevice graphicsDevice)
             {
-                // Vloer
-                for (int i = 0; i < 25; i++) objects.Add(new Block(blockTex, blockSourceRect, new Vector2(i * 64, 400)));
-                for (int i = 30; i < 40; i++) objects.Add(new Block(blockTex, blockSourceRect, new Vector2(i * 64, 400)));
+                var objects = new List<IGameObject>();
 
-                // Platformen voor de jump
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(200, 300)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(264, 300)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(800, 300)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1000, 250)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1200, 175)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1500, 300)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1564, 236)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1300, 80)));
-
-                // Platformen na de jump
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(2150, 300)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(2250, 200)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(2150, 100)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(2560, 336)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(2624, 272)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(2688, 208)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(2752, 144)));
-
-                for (int i = 43; i < 55; i++) objects.Add(new Block(blockTex, blockSourceRect, new Vector2(2816, 144)));
-
-                // Powerups 
-                objects.Add(new PowerUp(powerUpTex, powerUpRect, new Vector2(260, 260)));
-                objects.Add(new PowerUp(powerUpTex, powerUpRect, new Vector2(1594, 200)));
-
-                // Coins 
-                objects.Add(new Coin(CoinTex, coinRect, new Vector2(830, 260), 2, coinFrames));
-                objects.Add(new Coin(CoinTex, coinRect, new Vector2(1320, 60), 2, coinFrames));
-                objects.Add(new Coin(CoinTex, coinRect, new Vector2(2170, 80), 2, coinFrames));
-                objects.Add(new Coin(CoinTex, coinRect, new Vector2(2860, 100), 2, coinFrames));
-
-                // Patrol slime
-                var slimePatrol = new PatrolEnemyBehavior(1.5f);
-                var slime = new Enemy(greenEnemyTex, new Vector2(350, 355), greenSlimeFrames, slimePatrol, 3f, objects);
-                objects.Add(slime);
-
-                // Trap
-                var trapBehavior1 = new TrapBehavior(2568, 2650, 2);
-                objects.Add(new Trap(SurikenTex, SurikenRect, new Vector2(2568, 300), trapBehavior1));
-                var trapBehavior2 = new TrapBehavior(2632, 2714, 2);
-                objects.Add(new Trap(SurikenTex, SurikenRect, new Vector2(2714, 236), trapBehavior2));
-            }
-
-            // =============================================================
-            // LEVEL 2
-            // =============================================================
-            if (levelIndex == 2)
-            {
-                // vloer
-                for (int i = -10; i < 24; i++) objects.Add(new Block(blockTex, blockSourceRect, new Vector2(i * 64, 400)));
-                for (int i = 30; i < 50; i++) objects.Add(new Block(blockTex, blockSourceRect, new Vector2(i * 64, 400)));
-
-                //voor vallende muur
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(350, 336)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(414, 272)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(478, 208)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1100, 300)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1536, 336)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1856, 250)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1856, 90)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(2200, 285)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(2800, 285)));
-
-                //na vallende muur
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(3200, 336)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(3264, 272)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(3328, 208)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(3392, 144)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(3456, 144)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(3520, 144)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(3584, 144)));
-
-
-                // eerste muur
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1920, 336)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1920, 272)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1920, 208)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1920, 144)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1920, 80)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1920, 16)));
-                objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1920, -48)));
-
-                // tweede muur
-                List<BigWall> gateBlocks = new List<BigWall>();
-
-                // Helper functie: Voegt blok toe aan de game-wereld EN aan de lijst voor de GateKeeper
-                void AddGateBlock(float x, float y)
+                // --- LEVEL 1 (Blijft hetzelfde) ---
+                if (levelIndex == 1)
                 {
-                    var gate = new BigWall(blockTex, blockSourceRect, new Vector2(x, y));
-                    objects.Add(gate);
-                    gateBlocks.Add(gate);
+                    //vloer
+                    for (int i = 0; i < 25; i++) objects.Add(new Block(blockTex, blockSourceRect, new Vector2(i * 64, 400)));
+                    for (int i = 30; i < 40; i++) objects.Add(new Block(blockTex, blockSourceRect, new Vector2(i * 64, 400)));
+
+                    //blokken voor jump
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(200, 300)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(264, 300)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(800, 300)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1000, 250)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1200, 175)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1500, 300)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1564, 236)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1300, 80)));
+
+                    //blokken na jump
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(2150, 300)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(2250, 200)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(2150, 100)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(2560, 336)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(2624, 272)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(2688, 208)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(2752, 144)));
+
+                    //einde vloer
+                    for (int i = 43; i < 55; i++) objects.Add(new Block(blockTex, blockSourceRect, new Vector2(2816, 144)));
+
+                    //powerups
+                    objects.Add(new PowerUp(powerUpTex, powerUpRect, new Vector2(260, 260)));
+                    objects.Add(new PowerUp(powerUpTex, powerUpRect, new Vector2(1594, 200)));
+
+                    //coins
+                    objects.Add(new Coin(CoinTex, coinRect, new Vector2(830, 260), 2, coinFrames));
+                    objects.Add(new Coin(CoinTex, coinRect, new Vector2(1320, 60), 2, coinFrames));
+                    objects.Add(new Coin(CoinTex, coinRect, new Vector2(2170, 80), 2, coinFrames));
+                    objects.Add(new Coin(CoinTex, coinRect, new Vector2(2860, 100), 2, coinFrames));
+
+                    //green slime
+                    var slimePatrol = new PatrolEnemyBehavior(1.5f, 42, 36, objects);
+                    var slime = new Enemy(greenEnemyTex, new Vector2(350, 355), greenSlimeFrames, slimePatrol, 3f, objects);
+                    objects.Add(slime);
+
+                    //traps
+                    var trapBehavior1 = new TrapBehavior(2568, 2650, 2);
+                    objects.Add(new Trap(SurikenTex, SurikenRect, new Vector2(2568, 300), trapBehavior1));
+                    var trapBehavior2 = new TrapBehavior(2632, 2714, 2);
+                    objects.Add(new Trap(SurikenTex, SurikenRect, new Vector2(2714, 236), trapBehavior2));
                 }
 
-                AddGateBlock(3000, 336);
-                AddGateBlock(3000, 272);
-                AddGateBlock(3000, 208);
-                AddGateBlock(3000, 144);
-                AddGateBlock(3000, 80);
-                AddGateBlock(3000, 16);
-                AddGateBlock(3000, -48);
+                // --- LEVEL 2 (MET BOSS) ---
+                if (levelIndex == 2)
+                {
+                    int bossWidth = 14 * 10;
+                    int bossHeight = 12 * 10;
+                    //vloer
+                    for (int i = -10; i < 24; i++) objects.Add(new Block(blockTex, blockSourceRect, new Vector2(i * 64, 400)));
+                    for (int i = 30; i < 50; i++) objects.Add(new Block(blockTex, blockSourceRect, new Vector2(i * 64, 400)));
 
-                // powerups 
-                objects.Add(new PowerUp(powerUpTex, powerUpRect, new Vector2(1130, 260)));
-                objects.Add(new PowerUp(powerUpTex, powerUpRect, new Vector2(1568, 300)));
-                objects.Add(new PowerUp(powerUpTex, powerUpRect, new Vector2(1875, 220)));
-
-
-                // powerups die respawnen elke 5 sec
-                objects.Add(new PowerUp(powerUpTex, powerUpRect, new Vector2(2230, 250), true));
-                objects.Add(new PowerUp(powerUpTex, powerUpRect, new Vector2(2830, 250), true));
-
-                // coins
-                objects.Add(new Coin(CoinTex, coinRect, new Vector2(420, 355), 2, coinFrames));
-                objects.Add(new Coin(CoinTex, coinRect, new Vector2(1950, -85), 2, coinFrames));
-                objects.Add(new Coin(CoinTex, coinRect, new Vector2(3600, 110), 2, coinFrames));
+                    //voor muur
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(350, 336)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(414, 272)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(478, 208)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1100, 300)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1536, 336)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1856, 250)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(1856, 60)));
 
 
-                // groene slimes
+                    //gewone muur
+                    objects.Add(new BigWall(blockTex, wallRect, new Vector2(1920, 304)));
+                    objects.Add(new BigWall(blockTex, wallRect, new Vector2(1920, 208)));
+                    objects.Add(new BigWall(blockTex, wallRect, new Vector2(1920, 112)));
+                    objects.Add(new BigWall(blockTex, wallRect, new Vector2(1920, 16)));
 
-                // slimes dat niet getracked moeten worden voor vallende muur
-                var slimePatrol = new PatrolEnemyBehavior(1.5f);
-                objects.Add(new Enemy(greenEnemyTex, new Vector2(600, 355), greenSlimeFrames, slimePatrol, 3f, objects));
+                    //na gevallen muur
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(3200, 336)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(3264, 272)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(3328, 208)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(3392, 144)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(3456, 144)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(3520, 144)));
+                    objects.Add(new Block(blockTex, blockSourceRect, new Vector2(3584, 144)));
 
-                var slimePatrol2 = new PatrolEnemyBehavior(1.5f);
-                objects.Add(new Enemy(greenEnemyTex, new Vector2(1200, 355), greenSlimeFrames, slimePatrol2, 3f, objects));
 
-                // slimes die wel getracked moeten worden voor muur
-                List<Enemy> slimesToWatch = new List<Enemy>();
 
-                var slimePatrol3 = new PatrolEnemyBehavior(1.5f);
-                var slime3 = new Enemy(greenEnemyTex, new Vector2(2000, 355), greenSlimeFrames, slimePatrol3, 3f, objects);
-                objects.Add(slime3);
-                slimesToWatch.Add(slime3);
+                    //traps
+                    var trapBehavior1 = new TrapBehavior(3264, 3392, 2);
+                    objects.Add(new Trap(SurikenTex, SurikenRect, new Vector2(3264, 220), trapBehavior1));
+                    var trapBehavior2 = new TrapBehavior(3328, 3456, 2);
+                    objects.Add(new Trap(SurikenTex, SurikenRect, new Vector2(3456, 160), trapBehavior2));
 
-                var slimePatrol4 = new PatrolEnemyBehavior(1.5f);
-                var slime4 = new Enemy(greenEnemyTex, new Vector2(2400, 355), greenSlimeFrames, slimePatrol4, 3f, objects);
-                objects.Add(slime4);
-                slimesToWatch.Add(slime4);
+                    //muur die weg valt
+                    List<BigWall> gateBlocks = new List<BigWall>();
+                    void AddGateBlock(float x, float y)
+                    {
+                        var gate = new BigWall(blockTex, wallRect, new Vector2(x, y));
+                        objects.Add(gate);
+                        gateBlocks.Add(gate);
+                    }
+                    AddGateBlock(3000, 304);
+                    AddGateBlock(3000, 208);
+                    AddGateBlock(3000, 112);
+                    AddGateBlock(3000, 16);
 
-                var slimePatrol5 = new PatrolEnemyBehavior(1.5f);
-                var slime5 = new Enemy(greenEnemyTex, new Vector2(2600, 355), greenSlimeFrames, slimePatrol5, 3f, objects);
-                objects.Add(slime5);
-                slimesToWatch.Add(slime5);
 
-                var slimePatrol6 = new PatrolEnemyBehavior(1.5f);
-                var slime6 = new Enemy(greenEnemyTex, new Vector2(2800, 355), greenSlimeFrames, slimePatrol6, 3f, objects);
-                objects.Add(slime6);
-                slimesToWatch.Add(slime6);
+                    //powerups
+                    objects.Add(new PowerUp(powerUpTex, powerUpRect, new Vector2(1568, 300)));
+                    objects.Add(new PowerUp(powerUpTex, powerUpRect, new Vector2(2230, 300), true));
+                    objects.Add(new PowerUp(powerUpTex, powerUpRect, new Vector2(2830, 300), true));
 
-                // gatekeeper
-                var keeper = new GateKeeper(gateBlocks, slimesToWatch);
-                objects.Add(keeper);
+                    //coins
+                    objects.Add(new Coin(CoinTex, coinRect, new Vector2(490, 190), 2, coinFrames));
+                    objects.Add(new Coin(CoinTex, coinRect, new Vector2(1950, -80), 2, coinFrames));
+                    objects.Add(new Coin(CoinTex, coinRect, new Vector2(3600, 120), 2, coinFrames));
 
-                // 8 Grote Paarse slime
-                var chaseLogic = new ConstantMoveBehavior(1);
-                float megaScale = 28f;
-                Vector2 startPos = new Vector2(-500, -20);
-                var megaSlime = new Enemy(purpleEnemyTex, startPos, purpleSlimeFrames, chaseLogic, megaScale, new List<IGameObject>());
 
-                objects.Add(megaSlime);
 
-                // Trap
-                var trapBehavior3 = new TrapBehavior(3232, 3300, 2);
-                objects.Add(new Trap(SurikenTex, SurikenRect, new Vector2(3232, 272), trapBehavior3));
-                var trapBehavior4 = new TrapBehavior(3296, 3364, 2);
-                objects.Add(new Trap(SurikenTex, SurikenRect, new Vector2(3364, 236), trapBehavior4));
+                    //green slimes
+                    var slimePatrol = new PatrolEnemyBehavior(1.5f, 42, 36, objects);
+                    objects.Add(new Enemy(greenEnemyTex, new Vector2(600, 355), greenSlimeFrames, slimePatrol, 3f, objects));
+                    var slimePatrol2 = new PatrolEnemyBehavior(1.5f, 42, 36, objects);
+                    objects.Add(new Enemy(greenEnemyTex, new Vector2(1200, 355), greenSlimeFrames, slimePatrol2, 3f, objects));
+
+                    var bossStrategy = new PatrolEnemyBehavior(2f, bossWidth, bossHeight, objects, 20);
+                    // 2. Maak de Boss aan (HP op 100, schaal op 10f)
+                    var boss = new Boss(
+                        purpleEnemyTex,
+                        new Vector2(2500, 100), // Positie (pas aan naar wens)
+                        purpleSlimeFrames,
+                        bossStrategy,
+                        10f, // DE SCHAAL: 10 keer groter
+                        objects,
+                        100,
+                        graphicsDevice
+                    );
+
+                    objects.Add(boss);
+
+                    // 3. De GateKeeper
+                    List<Enemy> enemiesToWatch = new List<Enemy> { boss };
+                    objects.Add(new GateKeeper(gateBlocks, enemiesToWatch));
+
+
+                }
+
+                return objects;
             }
-
-            return objects;
         }
     }
-}

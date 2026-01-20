@@ -15,3 +15,4 @@ namespace SofEngeneering_project.Interfaces
         Rectangle CollisionBox { get; }
     }
 }
+

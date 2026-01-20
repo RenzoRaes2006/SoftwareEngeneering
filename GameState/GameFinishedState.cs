@@ -2,32 +2,34 @@
 using Microsoft.Xna.Framework.Graphics;
 using SofEngeneering_project.Interfaces;
 using SofEngeneering_project.view;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SofEngeneering_project.GameState
 {
-    public class GameFinishedState:IGameState
+    public class GameFinishedState : IGameState
     {
         private Game1 _game;
-        private GameFinishedScreen _screen;
+        private GenericMenuScreen _screen;
 
         public GameFinishedState(Game1 game)
         {
             _game = game;
-            _screen = new GameFinishedScreen(_game.GameFont, _game.GraphicsDevice);
+
+            // Configureer voor Einde Spel (Goud/Groen overlay)
+            _screen = new GenericMenuScreen(
+                _game.GameFont,
+                _game.GraphicsDevice,
+                "VICTORY! YOU COMPLETED THE GAME",
+                "MAIN MENU",
+                Color.DarkGreen * 0.9f
+            );
         }
 
         public void Update(GameTime gameTime)
         {
             string action = _screen.Update();
 
-            if (action == "Restart")
+            if (action == "Action") // Action betekent hier naar Menu
             {
-                // Ga terug naar het hoofdmenu
                 _game.ChangeState(new MenuState(_game));
             }
             else if (action == "Exit")
