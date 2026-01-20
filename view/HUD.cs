@@ -7,7 +7,7 @@ namespace SofEngeneering_project.View
     public class HUD : IObserver
     {
         private SpriteFont _font;
-        private Texture2D _heartTex; // Het plaatje voor het hartje
+        private Texture2D _heartTex;
         private int _screenWidth;
 
         private int _coins;
@@ -15,7 +15,6 @@ namespace SofEngeneering_project.View
         private float _timeRemaining;
         private int _lives;
 
-        // Constructor accepteert nu de Heart Texture
         public HUD(SpriteFont font, Texture2D heartTex, int screenWidth)
         {
             _font = font;
@@ -33,19 +32,15 @@ namespace SofEngeneering_project.View
 
         public void Draw(SpriteBatch sb)
         {
-            // 1. Coins (Rechtsboven)
             string coinText = $"Coins: {_coins}";
             Vector2 coinSize = _font.MeasureString(coinText);
             sb.DrawString(_font, coinText, new Vector2(_screenWidth - coinSize.X - 20, 20), Color.Yellow);
 
-            // 2. Levens (Linksboven) - Teken een hartje voor elk leven
             for (int i = 0; i < _lives; i++)
             {
-                // Elk hartje 40 pixels opschuiven. Schaal 1.5f voor duidelijkheid.
                 sb.Draw(_heartTex, new Vector2(20 + (i * 40), 20), null, Color.White, 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
             }
 
-            // 3. Timer
             if (_showPowerUpTimer)
             {
                 string timeText = $"Super Jump: {_timeRemaining:0.0}s";

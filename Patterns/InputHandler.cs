@@ -11,7 +11,6 @@ namespace SofEngeneering_project.Patterns
     public class InputHandler
     {
 
-        // Caching van commands (Optimization)
         private ICommand _moveLeft = new MoveLeftCommand();
         private ICommand _moveRight = new MoveRightCommand();
         private ICommand _jump = new JumpCommand();
@@ -29,7 +28,7 @@ namespace SofEngeneering_project.Patterns
             else
                 commands.Add(_idle);
 
-            if (state.IsKeyDown(Keys.Space) || state.IsKeyDown(Keys.Z))
+            if (state.IsKeyDown(Keys.Up) || state.IsKeyDown(Keys.Z) || state.IsKeyDown(Keys.Space))
                 commands.Add(_jump);
 
             return commands;

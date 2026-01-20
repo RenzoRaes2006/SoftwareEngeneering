@@ -54,14 +54,9 @@ namespace SofEngeneering_project.Animaties
 
             float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (delta > 1.0f)
-            {
-                delta = delta / 1000f;
-            }
-
             _timer += delta;
 
-            if (_timer > _frameTime)
+            if (_timer >= _frameTime)
             {
                 _timer = 0f;
                 CurrentFrame++;

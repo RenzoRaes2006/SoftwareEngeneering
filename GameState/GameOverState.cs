@@ -8,7 +8,7 @@ namespace SofEngeneering_project.GameState
     public class GameOverState : IGameState
     {
         private Game1 _game;
-        private GenericMenuScreen _screen; // Gebruik de generieke
+        private GenericMenuScreen _screen;
         private int _levelToRestart;
 
         public GameOverState(Game1 game, int levelToRestart)
@@ -16,7 +16,6 @@ namespace SofEngeneering_project.GameState
             _game = game;
             _levelToRestart = levelToRestart;
 
-            // Configureer hier de tekst en kleur voor Game Over (Rood overlay)
             _screen = new GenericMenuScreen(
                 _game.GameFont,
                 _game.GraphicsDevice,
@@ -30,7 +29,7 @@ namespace SofEngeneering_project.GameState
         {
             string action = _screen.Update();
 
-            if (action == "Action") // Action betekent hier herstarten
+            if (action == "Action")
             {
                 _game.ChangeState(new PlayingState(_game, _levelToRestart));
             }

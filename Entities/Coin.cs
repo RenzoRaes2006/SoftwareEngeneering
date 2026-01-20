@@ -15,19 +15,18 @@ namespace SofEngeneering_project.Entities
         public Vector2 Position { get; private set; }
         public Rectangle CollisionBox { get; private set; }
 
-        // Source rectangle voor Coin
         private Rectangle _sourceRect;
 
-        private float _scale; // NIEUW: Hoeveel keer groter?
+        private float _scale;
 
-        // Zodat we weten of hij al opgepakt is
+        // opgepakt of niet
         public bool IsCollected { get; set; } = false;
 
         // --- ANIMATIE VARIABELEN ---
-        private List<Rectangle> _frames; // De lijst met alle uitsnedes
-        private int _currentFrame = 0;   // Welk plaatje laten we zien?
-        private float _timer = 0f;       // Timer voor snelheid
-        private float _frameSpeed = 0.1f; // Snelheid animatie (0.1s per frame)
+        private List<Rectangle> _frames;
+        private int _currentFrame = 0;
+        private float _timer = 0f;
+        private float _frameSpeed = 0.1f;
 
         public Coin(Texture2D texture, Rectangle sourceRect, Vector2 position, float scale, List<Rectangle> frames)
         {
@@ -53,7 +52,7 @@ namespace SofEngeneering_project.Entities
                 _timer = 0f;
                 _currentFrame++;
 
-                // Loop terug naar 0 als we aan het einde zijn
+                // terug naar 0 als einde is
                 if (_currentFrame >= _frames.Count)
                 {
                     _currentFrame = 0;

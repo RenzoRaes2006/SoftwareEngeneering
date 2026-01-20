@@ -67,13 +67,7 @@ namespace SofEngeneering_project.GameState
 
             for (int i = 0; i < _gameObjects.Count; i++)
             {
-                var obj = _gameObjects[i];
-                obj.Update(gameTime);
-
-                if (obj is Enemy enemy)
-                {
-                    PhysicsService.HandleEnemyPhysics(enemy, _gameObjects);
-                }
+                _gameObjects[i].Update(gameTime);
             }
 
             _game.Camera.Follow(_hero);
@@ -94,12 +88,11 @@ namespace SofEngeneering_project.GameState
                     }
                     else if (obj is Enemy enemy && !enemy.IsDead)
                     {
-                        // 1. Check eerst of we van bovenaf komen (Schade aan Enemy)
                         bool isFallingOnTop = _hero.Velocity.Y > 0 && _hero.CollisionBox.Bottom < enemy.CollisionBox.Top + 30;
 
                         if (isFallingOnTop)
                         {
-                            _hero.Bounce(); // Speler springt weer omhoog
+                            _hero.Bounce();
 
                             if (enemy is Boss boss)
                             {
@@ -112,7 +105,6 @@ namespace SofEngeneering_project.GameState
                                 objectToRemove = enemy;
                             }
                         }
-                        // 2. GEBRUIK 'ELSE IF': Alleen als we NIET van bovenaf kwamen, krijgt de player schade
                         else
                         {
                             bool isHeroDead = _hero.TakeDamage();
@@ -124,7 +116,6 @@ namespace SofEngeneering_project.GameState
                             }
                             else
                             {
-                                // Enemy sprint weg na het raken van de speler
                                 if (enemy.MovementStrategy is PatrolEnemyBehavior patrol)
                                 {
                                     bool shouldRunRight = _hero.Position.X < enemy.Position.X;
@@ -148,13 +139,10 @@ namespace SofEngeneering_project.GameState
 
         public void Draw(SpriteBatch sb)
         {
-            // 1. Achtergrond (zonder camera)
             sb.Begin(samplerState: SamplerState.PointClamp);
             _background.Draw(sb, _game.Camera);
             sb.End();
 
-            // 2. Game Objecten (MET camera transformatie)
-            // De Boss MOET hierin zitten om mee te bewegen met de wereld
             sb.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _game.Camera.Transform);
             foreach (var obj in _gameObjects)
             {
@@ -162,7 +150,6 @@ namespace SofEngeneering_project.GameState
             }
             sb.End();
 
-            // 3. HUD (zonder camera)
             sb.Begin();
             _hud.Draw(sb);
             sb.End();

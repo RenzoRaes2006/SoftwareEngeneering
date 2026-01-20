@@ -17,29 +17,23 @@ namespace SofEngeneering_project.GameState
     {
         private Game1 _game;
 
-        // De knoppen declareren (Hier zijn ze nog NULL/leeg)
         private Button _startButton;
         private Button _levelSelectButton;
         private Button _quitButton;
 
-        // Muis status bewaren
         private MouseState _oldMouseState;
 
         public MenuState(Game1 game)
         {
             _game = game;
 
-            // 1. Ophalen van Texture en Font
-            // Als hier een error komt, is Game1.LoadContent nog niet klaar geweest
             Texture2D btnTex = _game.PixelTexture;
             SpriteFont font = _game.GameFont;
 
-            // 2. KNOPPEN AANMAKEN (Cruciaal! Anders crasht de Update)
             _startButton = new Button(btnTex, font, "Play", new Vector2(300, 200));
             _levelSelectButton = new Button(btnTex, font, "Choose level", new Vector2(300, 270));
             _quitButton = new Button(btnTex, font, "Exit", new Vector2(300, 340));
 
-            // 3. Eerste muis status ophalen
             _oldMouseState = Mouse.GetState();
         }
 
@@ -47,7 +41,6 @@ namespace SofEngeneering_project.GameState
         {
             MouseState newMouseState = Mouse.GetState();
 
-            // Check of _startButton bestaat voordat we klikken (extra veiligheid)
             if (_startButton != null && _startButton.IsClicked(newMouseState, _oldMouseState))
             {
                 _game.ChangeState(new PlayingState(_game, 1));
@@ -72,16 +65,13 @@ namespace SofEngeneering_project.GameState
 
             if (_game.MenuBackgroundTex != null)
             {
-                // We maken een rechthoek zo groot als het scherm om de image te stretchen/fitten
                 Rectangle screenRect = new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height);
                 spriteBatch.Draw(_game.MenuBackgroundTex, screenRect, Color.White);
             }
             else
             {
-                // Fallback als de image niet gevonden wordt: oude blauwe kleur
                 _game.GraphicsDevice.Clear(Color.DarkBlue);
             }
-            // ----------------------------------------------
 
             spriteBatch.DrawString(_game.GameFont, "Software engeneering game", new Vector2(230, 100), Color.Black);
 

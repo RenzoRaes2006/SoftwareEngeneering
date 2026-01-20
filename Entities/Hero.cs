@@ -42,18 +42,14 @@ namespace SofEngeneering_project.Entities
         {
             float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            // 1. Zwaartekracht
             Velocity += new Vector2(0, 0.45f);
 
-            // 2. Input & States (Hier wordt WantsToJump verwerkt)
             CurrentState.Update(this, gameTime);
             Animatie.Update(gameTime);
 
-            // 3. Physics
             PhysicsService.MoveX(this, LevelObjects);
             bool isGrounded = PhysicsService.MoveY(this, LevelObjects);
 
-            // 4. State switching
             if (isGrounded)
             {
                 if (CurrentState is JumpingState || CurrentState is FallingState)
@@ -66,14 +62,13 @@ namespace SofEngeneering_project.Entities
             HandleTimers(delta);
             NotifyObservers();
 
-            // CRUCIAAL: Reset de vlag elke frame
             WantsToJump = false;
         }
 
-        private void ChangeState(IHeroState newState)
+        public void ChangeState(IHeroInterface hero, IHeroState newState)
         {
             CurrentState = newState;
-            CurrentState.Enter(this);
+            CurrentState.Enter(hero);
         }
 
         private void HandleTimers(float delta)

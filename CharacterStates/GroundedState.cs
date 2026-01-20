@@ -20,7 +20,7 @@ namespace SofEngeneering_project.CharacterStates
             if (hero.WantsToJump)
             {
                 hero.PerformJump();
-                hero.WantsToJump = false; // Direct verbruiken
+                hero.WantsToJump = false;
                 hero.CurrentState = new JumpingState();
                 hero.CurrentState.Enter(hero);
             }

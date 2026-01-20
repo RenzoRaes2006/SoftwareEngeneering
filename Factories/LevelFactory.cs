@@ -9,7 +9,6 @@
     {
         public static class LevelFactory
         {
-            // AANGEPAST: GraphicsDevice parameter toegevoegd voor de Boss HP balk
             public static List<IGameObject> CreateLevel(
                 int levelIndex,
                 Texture2D blockTex, Rectangle blockSourceRect, Rectangle wallRect,
@@ -22,7 +21,6 @@
             {
                 var objects = new List<IGameObject>();
 
-                // --- LEVEL 1 (Blijft hetzelfde) ---
                 if (levelIndex == 1)
                 {
                     //vloer
@@ -73,11 +71,11 @@
                     objects.Add(new Trap(SurikenTex, SurikenRect, new Vector2(2714, 236), trapBehavior2));
                 }
 
-                // --- LEVEL 2 (MET BOSS) ---
                 if (levelIndex == 2)
                 {
-                    int bossWidth = 14 * 10;
-                    int bossHeight = 12 * 10;
+                int bossWidth =14 * 10;
+                int bossHeight =12 * 10;
+                    
                     //vloer
                     for (int i = -10; i < 24; i++) objects.Add(new Block(blockTex, blockSourceRect, new Vector2(i * 64, 400)));
                     for (int i = 30; i < 50; i++) objects.Add(new Block(blockTex, blockSourceRect, new Vector2(i * 64, 400)));
@@ -147,23 +145,13 @@
                     var slimePatrol2 = new PatrolEnemyBehavior(1.5f, 42, 36, objects);
                     objects.Add(new Enemy(greenEnemyTex, new Vector2(1200, 355), greenSlimeFrames, slimePatrol2, 3f, objects));
 
-                    var bossStrategy = new PatrolEnemyBehavior(2f, bossWidth, bossHeight, objects, 20);
-                    // 2. Maak de Boss aan (HP op 100, schaal op 10f)
-                    var boss = new Boss(
-                        purpleEnemyTex,
-                        new Vector2(2500, 100), // Positie (pas aan naar wens)
-                        purpleSlimeFrames,
-                        bossStrategy,
-                        10f, // DE SCHAAL: 10 keer groter
-                        objects,
-                        100,
-                        graphicsDevice
-                    );
+                var bossBehavior = new JumpPatrolBehavior(2f, bossWidth, bossHeight, objects);
 
-                    objects.Add(boss);
+                var boss = new Boss(purpleEnemyTex, new Vector2(2500, 280), purpleSlimeFrames, bossBehavior, 10f, objects, 100, graphicsDevice);
+                objects.Add(boss);
 
-                    // 3. De GateKeeper
-                    List<Enemy> enemiesToWatch = new List<Enemy> { boss };
+                // 3. De GateKeeper
+                List<Enemy> enemiesToWatch = new List<Enemy> { boss };
                     objects.Add(new GateKeeper(gateBlocks, enemiesToWatch));
 
 

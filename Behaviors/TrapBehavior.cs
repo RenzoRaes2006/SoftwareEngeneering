@@ -11,8 +11,8 @@ namespace SofEngeneering_project.Behaviors
     public class TrapBehavior : IMovementEnemy
     {
         private float _speed;
-        private float _minX; // Linkergrens
-        private float _maxX; // Rechtergrens
+        private float _minX;
+        private float _maxX; 
         private bool _movingRight = true;
 
         public TrapBehavior(float minX, float maxX, float speed)
@@ -30,25 +30,22 @@ namespace SofEngeneering_project.Behaviors
             if (_movingRight)
             {
                 x += _speed;
-                // Hebben we de rechtergrens bereikt?
                 if (x >= _maxX)
                 {
-                    x = _maxX;           // Zet hem strak op de grens
-                    _movingRight = false; // Draai om
+                    x = _maxX;
+                    _movingRight = false; // omdraaien
                 }
             }
             else
             {
                 x -= _speed;
-                // Hebben we de linkergrens bereikt?
                 if (x <= _minX)
                 {
-                    x = _minX;           // Zet hem strak op de grens
-                    _movingRight = true;  // Draai om
+                    x = _minX;
+                    _movingRight = true;  // omdraaien
                 }
             }
 
-            // De Y-positie blijft hetzelfde, die verandert niet
             return new Vector2(x, currentPosition.Y);
         }
 

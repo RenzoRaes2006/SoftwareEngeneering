@@ -38,7 +38,7 @@ namespace SofEngeneering_project.Behaviors
             }
 
             int sensorX = _movingRight ? (int)currentPosition.X + _width + _sensorOffset : (int)currentPosition.X - _sensorOffset;
-            // SOLID: Sensor staat hoger om jitter-collision met de eigen vloer te negeren
+
             Rectangle groundSensor = new Rectangle(sensorX, (int)currentPosition.Y + _height - 25, 10, 45);
 
             bool groundAhead = false;

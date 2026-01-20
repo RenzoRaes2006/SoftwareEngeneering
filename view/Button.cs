@@ -18,7 +18,6 @@ namespace SofEngeneering_project.view
 
         public bool IsHovering { get; private set; }
 
-        // Positie en Grootte
         public Vector2 Position { get; set; }
 
         public Button(Texture2D texture, SpriteFont font, string text, Vector2 position)
@@ -28,19 +27,14 @@ namespace SofEngeneering_project.view
             _text = text;
             Position = position;
 
-            // We maken de knop zo groot als de texture (bijv. 200x50)
-            // Als je een 1x1 pixel texture gebruikt, moet je hier handmatig breedte/hoogte opgeven.
-            // Voor nu gokken we dat je texture een knop-vorm heeft, of we stretchen hem:
             _rectangle = new Rectangle((int)Position.X, (int)Position.Y, 200, 50);
         }
 
         public bool IsClicked(MouseState currentMouse, MouseState previousMouse)
         {
-            // Check of muis op knop staat
             Rectangle mouseRect = new Rectangle(currentMouse.X, currentMouse.Y, 1, 1);
             IsHovering = _rectangle.Intersects(mouseRect);
 
-            // Check of er geklikt is (Linkermuisknop ingedrukt)
             if (IsHovering && currentMouse.LeftButton == ButtonState.Pressed && previousMouse.LeftButton == ButtonState.Released)
             {
                 return true;
@@ -51,15 +45,12 @@ namespace SofEngeneering_project.view
         public void Draw(SpriteBatch spriteBatch)
         {
             Color color = Color.White;
-            if (IsHovering) color = Color.Gray; // Wordt grijs als je erover muist
+            if (IsHovering) color = Color.Gray;
 
-            // Teken de knop achtergrond (We stretchen de texture naar 200x50)
             spriteBatch.Draw(_texture, _rectangle, color);
 
-            // Teken de tekst in het midden
             if (!string.IsNullOrEmpty(_text))
             {
-                // Bereken midden van de knop voor de tekst
                 Vector2 textSize = _font.MeasureString(_text);
                 Vector2 textPos = new Vector2(
                     _rectangle.X + (_rectangle.Width / 2) - (textSize.X / 2),

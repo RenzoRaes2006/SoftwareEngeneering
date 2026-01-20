@@ -16,7 +16,6 @@ namespace SofEngeneering_project.GameState
             _game = game;
             _completedLevelIndex = completedLevelIndex;
 
-            // Configureer voor Level Complete (Zwart/Transparant overlay)
             _screen = new GenericMenuScreen(
                 _game.GameFont,
                 _game.GraphicsDevice,
@@ -30,7 +29,7 @@ namespace SofEngeneering_project.GameState
         {
             string action = _screen.Update();
 
-            if (action == "Action") // Action betekent hier volgend level
+            if (action == "Action")
             {
                 _game.ChangeState(new PlayingState(_game, _completedLevelIndex + 1));
             }

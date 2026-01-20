@@ -12,7 +12,6 @@ namespace SofEngeneering_project.Patterns
     {
         public void Execute(IMovable movable)
         {
-            // We behouden de Y snelheid (vallen/springen), maar zetten X op 0
             movable.Velocity = new Vector2(0, movable.Velocity.Y);
         }
     }

@@ -15,10 +15,8 @@ namespace SofEngeneering_project
 
         public Texture2D PixelTexture { get; private set; } 
 
-        // DE HUIDIGE STATE
         private IGameState _currentState;
 
-        // PUBLIEKE ASSETS (Zodat alle States ze kunnen gebruiken)
         public Texture2D KnightTex;
         public Texture2D BlockTex;
         public Texture2D BgTex;
@@ -31,14 +29,11 @@ namespace SofEngeneering_project
         public Texture2D MenuBackgroundTex;
         public Texture2D ChooseLevelBackgroundTex;
         public Texture2D HeartTex;
+        public Texture2D VictoryScreen;
 
-
-
-        // Data voor de factory
         public List<Rectangle> CoinFrames, greenSlimeFrames, purpleSlimeFrames;
         public Rectangle BlockPart, PowerUpPart, CoinPart, SurikenPart, WallPart;
 
-        // De Camera delen we publiek
         public Camera Camera;
 
         public Game1()
@@ -50,7 +45,6 @@ namespace SofEngeneering_project
 
         protected override void Initialize()
         {
-            // Camera initialiseren
             Camera = new Camera(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             IsMouseVisible = true;
             base.Initialize();  
@@ -60,7 +54,6 @@ namespace SofEngeneering_project
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // 1. LAAD ALLE ASSETS ÉÉN KEER
             KnightTex = Content.Load<Texture2D>("knight");
             BlockTex = Content.Load<Texture2D>("TX Tileset Ground");
             BgTex = Content.Load<Texture2D>("Summer2");
@@ -73,8 +66,9 @@ namespace SofEngeneering_project
             MenuBackgroundTex = Content.Load<Texture2D>("Summer5");
             ChooseLevelBackgroundTex = Content.Load<Texture2D>("Summer6");
             HeartTex = Content.Load<Texture2D>("heart");
+            VictoryScreen = Content.Load<Texture2D>("Summer8");
 
-            // 2. SETUP DATA RECTANGLES
+            // data rechthoeken
             BlockPart = new Rectangle(0, 384, 96, 12);
             PowerUpPart = new Rectangle(0, 0, 16, 16);
             CoinPart = new Rectangle(3, 3, 10, 10);
@@ -111,11 +105,9 @@ namespace SofEngeneering_project
             PixelTexture = new Texture2D(GraphicsDevice, 1, 1);
             PixelTexture.SetData(new[] { Color.White });
 
-            // 3. START HET SPEL IN HET MENU
             _currentState = new MenuState(this);
         }
 
-        // METHODE OM TE WISSELEN VAN STATE
         public void ChangeState(IGameState newState)
         {
             _currentState = newState;
@@ -123,10 +115,8 @@ namespace SofEngeneering_project
 
         protected override void Update(GameTime gameTime)
         {
-            // Input voor afsluiten mag altijd werken (noodknop)
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
-            // Delegeer update naar de huidige state
             _currentState.Update(gameTime);
 
             base.Update(gameTime);
@@ -136,7 +126,6 @@ namespace SofEngeneering_project
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // Delegeer draw naar de huidige state
             _currentState.Draw(_spriteBatch);
 
             base.Draw(gameTime);

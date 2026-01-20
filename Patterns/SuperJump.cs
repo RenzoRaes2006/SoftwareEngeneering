@@ -15,7 +15,6 @@ namespace SofEngeneering_project.Patterns
 
         public override float CalculateJump(float currentVelocityY)
         {
-            // Decorator patroon: Voer origineel uit en doe er iets extra's mee (x 1.5)
             return base.CalculateJump(currentVelocityY) * 1.5f;
         }
     }

@@ -15,31 +15,23 @@ namespace SofEngeneering_project.GameState
     {
         private Game1 _game;
 
-        // De knoppen variabelen
         private Button _lvl1Btn;
         private Button _lvl2Btn;
         private Button _backBtn;
 
-        // Muis status voor de "Ghost Click" fix
         private MouseState _oldMouseState;
 
         public ChooseLevelState(Game1 game)
         {
             _game = game;
 
-            // Assets ophalen
             Texture2D btnTex = _game.PixelTexture;
             SpriteFont font = _game.GameFont;
 
-            // --- DEZE REGELS MISTE JE WAARSCHIJNLIJK ---
-            // Hier worden de knoppen echt aangemaakt (geïnstantieerd).
-            // Zonder dit zijn ze 'null' en crasht de game.
             _lvl1Btn = new Button(btnTex, font, "LEVEL 1", new Vector2(300, 200));
             _lvl2Btn = new Button(btnTex, font, "LEVEL 2", new Vector2(300, 270));
             _backBtn = new Button(btnTex, font, "BACK", new Vector2(300, 400));
-            // ------------------------------------------
 
-            // Muis status initialiseren
             _oldMouseState = Mouse.GetState();
         }
 
@@ -47,7 +39,6 @@ namespace SofEngeneering_project.GameState
         {
             MouseState ms = Mouse.GetState();
 
-            // Check veiligheidshalve of de knoppen bestaan (!= null)
             if (_lvl1Btn != null && _lvl1Btn.IsClicked(ms, _oldMouseState))
             {
                 _game.ChangeState(new PlayingState(_game, 1));
@@ -63,7 +54,6 @@ namespace SofEngeneering_project.GameState
                 _game.ChangeState(new MenuState(_game));
             }
 
-            // Onthoud muis status
             _oldMouseState = ms;
         }
 

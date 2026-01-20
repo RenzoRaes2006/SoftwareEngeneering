@@ -14,13 +14,12 @@ namespace SofEngeneering_project.GameState
         {
             _game = game;
 
-            // Configureer voor Einde Spel (Goud/Groen overlay)
             _screen = new GenericMenuScreen(
                 _game.GameFont,
                 _game.GraphicsDevice,
                 "VICTORY! YOU COMPLETED THE GAME",
                 "MAIN MENU",
-                Color.DarkGreen * 0.9f
+                Color.DarkGreen * 0.4f
             );
         }
 
@@ -28,7 +27,7 @@ namespace SofEngeneering_project.GameState
         {
             string action = _screen.Update();
 
-            if (action == "Action") // Action betekent hier naar Menu
+            if (action == "Action")
             {
                 _game.ChangeState(new MenuState(_game));
             }
@@ -41,7 +40,15 @@ namespace SofEngeneering_project.GameState
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
+
+            Rectangle screenBounds = new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height);
+            if (_game.VictoryScreen != null)
+            {
+                spriteBatch.Draw(_game.VictoryScreen, screenBounds, Color.White);
+            }
+
             _screen.Draw(spriteBatch);
+
             spriteBatch.End();
         }
     }
