@@ -68,13 +68,13 @@ namespace SofEngeneering_project.view
             // Donkere achtergrond (optioneel, voor sfeer)
             spriteBatch.Draw(_buttonTexture, new Rectangle(0, 0, _screenWidth, _screenHeight), Color.Black * 0.5f);
 
-            string title = "LEVEL VOLTOOID!";
+            string title = "LEVEL COMPLETE!";
             Vector2 titleSize = _font.MeasureString(title);
             spriteBatch.DrawString(_font, title, new Vector2((_screenWidth - titleSize.X) / 2, 150), Color.Gold);
 
             // Knoppen tekenen
             spriteBatch.Draw(_buttonTexture, _nextButton, _nextColor);
-            DrawCenteredText(spriteBatch, "VOLGEND LEVEL", _nextButton);
+            DrawCenteredText(spriteBatch, "NEXT LEVEL", _nextButton);
 
             spriteBatch.Draw(_buttonTexture, _exitButton, _exitColor);
             DrawCenteredText(spriteBatch, "EXIT", _exitButton);

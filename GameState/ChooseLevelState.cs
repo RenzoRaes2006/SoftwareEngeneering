@@ -34,9 +34,9 @@ namespace SofEngeneering_project.GameState
             // --- DEZE REGELS MISTE JE WAARSCHIJNLIJK ---
             // Hier worden de knoppen echt aangemaakt (geïnstantieerd).
             // Zonder dit zijn ze 'null' en crasht de game.
-            _lvl1Btn = new Button(btnTex, font, "Level 1", new Vector2(300, 200));
-            _lvl2Btn = new Button(btnTex, font, "Level 2", new Vector2(300, 270));
-            _backBtn = new Button(btnTex, font, "Terug", new Vector2(300, 400));
+            _lvl1Btn = new Button(btnTex, font, "LEVEL 1", new Vector2(300, 200));
+            _lvl2Btn = new Button(btnTex, font, "LEVEL 2", new Vector2(300, 270));
+            _backBtn = new Button(btnTex, font, "BACK", new Vector2(300, 400));
             // ------------------------------------------
 
             // Muis status initialiseren
@@ -72,7 +72,7 @@ namespace SofEngeneering_project.GameState
             _game.GraphicsDevice.Clear(Color.DarkSlateGray);
 
             spriteBatch.Begin();
-            spriteBatch.DrawString(_game.GameFont, "Choose level", new Vector2(320, 100), Color.White);
+            spriteBatch.DrawString(_game.GameFont, "CHOOSE LEVEL", new Vector2(320, 100), Color.White);
 
             // Teken alleen als ze bestaan
             if (_lvl1Btn != null) _lvl1Btn.Draw(spriteBatch);

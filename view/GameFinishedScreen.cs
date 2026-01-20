@@ -73,8 +73,8 @@ namespace SofEngeneering_project.view
             spriteBatch.Draw(_buttonTexture, new Rectangle(0, 0, _screenWidth, _screenHeight), Color.Black * 0.8f);
 
             // Tekst: "Proficiat..."
-            string line1 = "PROFICIAT!";
-            string line2 = "U heeft de game voltooid.";
+            string line1 = "CONGRATULATIONS";
+            string line2 = "You have completed the game!";
 
             // Centreer de teksten
             Vector2 size1 = _font.MeasureString(line1);
@@ -85,7 +85,7 @@ namespace SofEngeneering_project.view
 
             // Teken knoppen
             spriteBatch.Draw(_buttonTexture, _restartButton, _restartColor);
-            DrawCenteredText(spriteBatch, "HERSTARTEN", _restartButton);
+            DrawCenteredText(spriteBatch, "RESTART", _restartButton);
 
             spriteBatch.Draw(_buttonTexture, _exitButton, _exitColor);
             DrawCenteredText(spriteBatch, "EXIT", _exitButton);

@@ -11,7 +11,7 @@ namespace SofEngeneering_project.Patterns
     {
         public float CalculateJump(float currentVelocityY)
         {
-            return -12f; // Springkracht
+            return -11f; // Springkracht
         }
     }
 }
