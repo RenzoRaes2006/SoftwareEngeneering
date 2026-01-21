@@ -15,18 +15,24 @@ namespace SofEngeneering_project.Behaviors
         public PatrolEnemyBehavior(float speed, int width, int height, List<IGameObject> levelObjects, int sensorOffset = 15)
         {
             _normalSpeed = _currentSpeed = speed;
-            _width = width; _height = height; _levelObjects = levelObjects; _sensorOffset = sensorOffset;
+            _width = width;
+            _height = height;
+            _levelObjects = levelObjects;
+            _sensorOffset = sensorOffset;
         }
 
         public void PanicAndRun(bool runToRight)
         {
-            _isFleeing = true; _fleeTimer = 1.2f;
-            _currentSpeed = _normalSpeed * 2.5f; _movingRight = runToRight;
+            _isFleeing = true;
+            _fleeTimer = 1.2f;
+            _currentSpeed = _normalSpeed * 2.5f;
+            _movingRight = runToRight;
         }
 
         public void UpdateStats(int currentHP, int maxHP)
         {
-            if (currentHP < maxHP * 0.4f) _normalSpeed = 3.0f;
+            if (currentHP < maxHP * 0.4f) 
+                _normalSpeed = 3.0f;
         }
 
         public Vector2 Move(Vector2 currentPosition, GameTime gameTime)
@@ -34,7 +40,11 @@ namespace SofEngeneering_project.Behaviors
             if (_isFleeing)
             {
                 _fleeTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-                if (_fleeTimer <= 0) { _isFleeing = false; _currentSpeed = _normalSpeed; }
+                if (_fleeTimer <= 0) 
+                { 
+                    _isFleeing = false;
+                    _currentSpeed = _normalSpeed; 
+                }
             }
 
             int sensorX = _movingRight ? (int)currentPosition.X + _width + _sensorOffset : (int)currentPosition.X - _sensorOffset;

@@ -15,7 +15,10 @@ namespace SofEngeneering_project.Behaviors
 
         public JumpPatrolBehavior(float speed, int width, int height, List<IGameObject> levelObjects)
         {
-            _speed = speed; _width = width; _height = height; _levelObjects = levelObjects;
+            _speed = speed;
+            _width = width;
+            _height = height;
+            _levelObjects = levelObjects;
         }
 
         public Vector2 Move(Vector2 currentPosition, GameTime gameTime)

@@ -22,7 +22,6 @@ namespace SofEngeneering_project.Entities
         // opgepakt of niet
         public bool IsCollected { get; set; } = false;
 
-        // --- ANIMATIE VARIABELEN ---
         private List<Rectangle> _frames;
         private int _currentFrame = 0;
         private float _timer = 0f;

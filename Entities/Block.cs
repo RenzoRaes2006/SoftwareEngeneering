@@ -28,12 +28,7 @@ namespace SofEngeneering_project.Entities
         {
             Rectangle destRect = new Rectangle((int)Position.X, (int)Position.Y, TILE_SIZE, 12);
 
-            spriteBatch.Draw(
-                Texture,
-                destRect,
-                _sourceRect,
-                Color.White
-            );
+            spriteBatch.Draw(Texture,destRect, _sourceRect, Color.White);
         }
     }
 }

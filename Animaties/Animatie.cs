@@ -50,7 +50,8 @@ namespace SofEngeneering_project.Animaties
 
         public void Update(GameTime gameTime)
         {
-            if (_xPositions == null || _xPositions.Length == 0) return;
+            if (_xPositions == null || _xPositions.Length == 0) 
+                return;
 
             float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
 

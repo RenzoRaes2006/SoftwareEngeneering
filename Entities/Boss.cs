@@ -21,7 +21,9 @@ namespace SofEngeneering_project.Entities
 
         public void TakeDamage(int damage)
         {
-            if (IsDead) return;
+            if (IsDead) 
+                return;
+
             CurrentHP -= damage;
             if (CurrentHP <= 0)
             {
@@ -32,7 +34,9 @@ namespace SofEngeneering_project.Entities
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (IsDead) return;
+            if (IsDead) 
+                return;
+
             base.Draw(spriteBatch);
 
             // HP Balk tekenen

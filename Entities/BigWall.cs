@@ -17,8 +17,10 @@ namespace SofEngeneering_project.Entities
         {
             get
             {
-                if (IsActive) return _bounds;
-                else return Rectangle.Empty;
+                if (IsActive) 
+                    return _bounds;
+                else 
+                    return Rectangle.Empty;
             }
         }
 

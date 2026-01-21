@@ -15,7 +15,7 @@ namespace SofEngeneering_project.CharacterStates
 
         public void HandleInput(ICommand command, IHeroInterface hero)
         {
-            // Als we input krijgen om te bewegen -> Ga naar RunningState
+            // input  -> naar RunningState
             if (command is MoveLeftCommand || command is MoveRightCommand)
             {
                 command.Execute(hero);
